@@ -1,7 +1,12 @@
 from flask import Flask
 
-app = Flask(__name__)
+def create_app():
 
-@app.route("/")
-def hello():
-    return "<h1> Hello World </h1>"
+    app = Flask(__name__)
+    
+    # register blueprints
+    from app.auth import blueprint as auth_bp
+    app.register_blueprint(auth_bp)
+
+
+    return app

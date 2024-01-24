@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{% block title %}{% endblock title %}</title>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+	<meta name="author" content="AdminKit">
+	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	
+	<title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+
+    {% include 'includes/styles.html' %}
+
+    <!-- specific page stylesheets -->
+    {% block stylesheets %}{% endblock stylesheets %}
+
+</head>
+
+<body>
+	<div class="wrapper">
+
+        {% include 'includes/sidebar.html' %}
+
+        <div class="main">
+
+            {% include 'includes/navigation.html' %}
+            
+            <main class="content">
+                {% block content %}
+                    
+                {% endblock content %}
+            </main>
+
+            {% include 'includes/footer.html' %}
+        </div>
+    </div>
+    {% include 'includes/scripts.html' %}
+
+    <!-- specific page js -->
+    {% block javascripts %}{% endblock javascripts %}
+
+</body>
+
+</html>

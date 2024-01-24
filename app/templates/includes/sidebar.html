@@ -7,11 +7,11 @@
 
         <ul class="sidebar-nav">
             <li class="sidebar-header">
-                Pages
+                Home
             </li>
 
             <li class="sidebar-item {% if 'index' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="index.html">
+                <a class="sidebar-link" href="{{ url_for('main.home') }}">
       <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
     </a>
             </li>
@@ -22,71 +22,58 @@
     </a>
             </li>
 
-            <li class="sidebar-item {% if 'login' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="{{ url_for('auth.login') }}">
-      <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Sign In</span>
-    </a>
-            </li>
-
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="{{ url_for('auth.register') }}">
-      <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Sign Up</span>
-    </a>
-            </li>
-
             <li class="sidebar-item {% if 'blank' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="pages-blank.html">
+                <a class="sidebar-link" href="{{ url_for('main.test') }}">
       <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
     </a>
             </li>
 
             <li class="sidebar-header">
-                Tools & Components
+                Finance
             </li>
 
-            <li class="sidebar-item {% if 'buttons' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="ui-buttons.html">
-      <i class="align-middle" data-feather="square"></i> <span class="align-middle">Buttons</span>
+            <li class="sidebar-item {% if 'expenses' in segment %} active {% endif %}">
+                <a class="sidebar-link" href="{{ url_for('main.expenses') }}">
+      <i class="align-middle" data-feather="square"></i> <span class="align-middle">Expenses</span>
     </a>
             </li>
 
-            <li class="sidebar-item {% if 'forms' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="ui-forms.html">
-      <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Forms</span>
+            <li class="sidebar-item {% if 'income' in segment %} active {% endif %}">
+                <a class="sidebar-link" href="{{ url_for('main.income') }}">
+      <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Income</span>
     </a>
             </li>
 
-            <li class="sidebar-item {% if 'cards' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="ui-cards.html">
-      <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Cards</span>
-    </a>
+            <!-- Sidebar children collapse , from v2.1.0 -->
+            <li class="sidebar-item {% if 'accounts' in segment %} active {% endif %}">
+                <a href="#auth" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="{% if 'accounts' in segment %}
+                    true
+                {% else %}
+                    false
+                {% endif %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users align-middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> <span class="align-middle">Accounts</span>
+                </a>
+                <ul id="auth" class="sidebar-dropdown list-unstyled collapse {% if 'accounts' in segment %} show {% endif %} " data-bs-parent="#sidebar">
+                    <li class="sidebar-item {% if 'cash' in segment %} active {% endif %} "><a class="sidebar-link" href="{{ url_for('main.accounts_cash') }}">Cash</a></li>
+                    <li class="sidebar-item {% if 'banks' in segment %} active {% endif %}" ><a class="sidebar-link" href="{{ url_for('main.accounts_banks') }}">Bank</a></li>
+                    <li class="sidebar-item {% if 'credit' in segment %} active {% endif %}"><a class="sidebar-link" href="{{ url_for('main.accounts_credit') }}">Cards <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+                </ul>
             </li>
-
-            <li class="sidebar-item {% if 'typography' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="ui-typography.html">
-      <i class="align-middle" data-feather="align-left"></i> <span class="align-middle">Typography</span>
-    </a>
-            </li>
-
-            <li class="sidebar-item {% if 'icons' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="icons-feather.html">
-      <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Icons</span>
-    </a>
-            </li>
+            <!-- Sidebar , from v2.1.0 -->
 
             <li class="sidebar-header">
-                Plugins & Addons
+                Other
             </li>
 
-            <li class="sidebar-item {% if 'charts' in segment %} active {% endif %}">
+            <li class="sidebar-item {% if 'settings' in segment %} active {% endif %}">
                 <a class="sidebar-link" href="charts-chartjs.html">
-      <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Charts</span>
+      <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Settings</span>
     </a>
             </li>
 
-            <li class="sidebar-item {% if 'maps' in segment %} active {% endif %}">
+            <li class="sidebar-item {% if 'signout' in segment %} active {% endif %}">
                 <a class="sidebar-link" href="maps-google.html">
-      <i class="align-middle" data-feather="map"></i> <span class="align-middle">Maps</span>
+      <i class="align-middle" data-feather="map"></i> <span class="align-middle">Sign out</span>
     </a>
             </li>
         </ul>

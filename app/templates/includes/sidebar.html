@@ -66,28 +66,18 @@
             </li>
 
             <li class="sidebar-item {% if 'settings' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="charts-chartjs.html">
+                <a class="sidebar-link" href="#">
       <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Settings</span>
     </a>
             </li>
 
             <li class="sidebar-item {% if 'signout' in segment %} active {% endif %}">
-                <a class="sidebar-link" href="maps-google.html">
+                <a class="sidebar-link" href="{{ url_for('auth.login') }}">
       <i class="align-middle" data-feather="map"></i> <span class="align-middle">Sign out</span>
     </a>
             </li>
         </ul>
 
-        <div class="sidebar-cta">
-            <div class="sidebar-cta-content">
-                <strong class="d-inline-block mb-2">Upgrade to Pro</strong>
-                <div class="mb-3 text-sm">
-                    Are you looking for more components? Check out our premium version.
-                </div>
-                <div class="d-grid">
-                    <a href="upgrade-to-pro.html" class="btn btn-primary">Upgrade to Pro</a>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </nav>

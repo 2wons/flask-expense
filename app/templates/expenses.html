@@ -11,17 +11,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Empty card</h5>
-                    <!-- Breadcrumbs -->
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                          <li class="breadcrumb-item"><a href="#">Home</a></li>
-                          <li class="breadcrumb-item"><a href="#">Library</a></li>
-                          <li class="breadcrumb-item active" aria-current="page">Data</li>
-                        </ol>
-                    </nav>
-                    <!-- Breadcrumbs -->
-
+                    <h2 class="card-title mb-0">Expense Summary</h2>
+                
                     <!-- Pagination -->
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-end">
@@ -41,23 +32,36 @@
                     <!-- Modal Button-->
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Launch demo modal
+                        Add Expense
                     </button>
                     
-                    <!-- Modal -->
+                    <!-- Modal Todo: separate -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <h1 class="modal-title fs-3" id="exampleModalLabel">Add Expense</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                            ...
+                              <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Name</label>
+                                <input type="text" class="form-control" placeholder="Cat food">
+                              </div>
+                              <label for="exampleFormControlInput1" class="form-label">Price</label>
+                              <div class="input-group mb-3">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                                <span class="input-group-text">.00</span>
+                              </div>
+                              <div class="input-group">
+                                <span class="input-group-text">Notes</span>
+                                <textarea class="form-control" aria-label="With textarea"></textarea>
+                              </div>
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary">Add</button>
                             </div>
                         </div>
                         </div>
@@ -66,9 +70,32 @@
 
                 </div>
                 <div class="card-body">
-                    
-                    
-
+                    <table class="table">
+                      <thead class="table-light">
+                        <tr>
+                          <th scope="row">#</th>
+                          <th scope="row">Name</th>
+                          <th scope="row">Amount</th>
+                          <th scope="row">Date Spent</th>
+                          <th scope="row">Category</th>
+                          <th scope="row">Paid Via</th>
+                          <th scope="row">Note</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for expense in expenses %}
+                          <tr>
+                            <th scope="row"> {{ loop.index }} </th>
+                            <td> {{ expense.name }} </td>
+                            <td> {{ expense.amount }} </td>
+                            <td> {{ expense.date_spent }} </td>
+                            <td> {{ expense.category }} </td>
+                            <td> {{ expense.paid_via }} </td>
+                            <td> {{ expense.note }} </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
                 </div>
             </div>
         </div>

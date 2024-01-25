@@ -2,6 +2,7 @@
 
 from flask import render_template
 from app.main import blueprint
+from app.main.util import test_expenses
 
 @blueprint.route('/home')
 def home():
@@ -9,7 +10,10 @@ def home():
 
 @blueprint.route('/expenses')
 def expenses():
-    return render_template('expenses.html', segment='expenses')
+    """manages expenses"""
+    expenses = test_expenses()
+    return render_template('expenses.html', segment='expenses', expenses=expenses)
+
 
 @blueprint.route('/income')
 def income():

@@ -1,6 +1,6 @@
 {% extends 'layouts/auth_base.html' %}
 
-{% block title %} Register {% endblock title %}
+{% block title %} Register {% endblock title %}<!--  -->
 
 {% block content %}
   <div class="text-center mt-4">
@@ -13,24 +13,57 @@
   <div class="card">
     <div class="card-body">
       <div class="m-sm-3">
-        <form>
+        <form action="" method="post" novalidate>
+          {{ form.hidden_tag() }}
           <div class="mb-3">
             <label class="form-label">Full name</label>
             <div class="input-group">
-              <input type="text" aria-label="First name" class="form-control" placeholder="first name">
-              <input type="text" aria-label="Last name" class="form-control" placeholder="last name">
+              
+              {{ form.first_name(class="form-control form-control-lg" + (' is-invalid' if form.first_name.errors else ''), placeholder="First Name") }}
+              <div class="invalid-feedback">
+                {% for error in form.first_name.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+
+              {{ form.last_name(class="form-control form-control-lg" + (' is-invalid' if form.last_name.errors else ''), placeholder="Last Name") }}
+              <div class="invalid-feedback">
+                {% for error in form.last_name.errors %}
+                  <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
+            <label class="form-label"> {{ form.email.label }} </label>
+            {{ form.email(class="form-control form-control-lg" + (' is-invalid' if form.email.errors else ''), placeholder="Enter your email") }}
+            <div class="invalid-feedback">
+              {% for error in form.email.errors %}
+                <span> {{ error }} </span>
+              {% endfor %}
+            </div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input class="form-control form-control-lg" type="password" name="password" placeholder="Enter password" />
+            <label class="form-label">{{ form.password.label }}</label>
+            {{ form.password(class="form-control form-control-lg" + (' is-invalid' if form.password.errors else ''), placeholder="Enter password") }}
+            <div class="invalid-feedback">
+              {% for error in form.password.errors %}
+                <span> {{ error }} </span>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ form.confirm_password.label }}</label>
+            {{ form.confirm_password(class="form-control form-control-lg" + (' is-invalid' if form.confirm_password.errors else ''), placeholder="Enter password again") }}
+            {% for error in form.confirm_password.errors %}
+              <div class="invalid-feedback">
+                <span> {{ error }} </span>
+              </div>
+            {% endfor %}
           </div>
           <div class="d-grid gap-2 mt-3">
-            <a href="{{ url_for('main.home') }}" class="btn btn-lg btn-primary">Sign up</a>
+            {{ form.submit(class="btn btn-lg btn-primary") }}
           </div>
         </form>
       </div>

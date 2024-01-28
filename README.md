@@ -1,15 +1,14 @@
 # flask-expense
 
 ### Current
-- moved to new theme
-- defined auth + main endpoints
-- defined layouts
-- removed database for rework (sqlite to postgres, update tables)
+- [X] setup theme
+- [X] db migrations
+- [X] login and signup
 
 ### Todo
-- finish database rework
-- host db and connect
-- move to datatables
-- major:
- - track subscriptions
- - track budget
+- add
+ - [ ] accounts
+ - [ ] expense
+ - [ ] income
+ - [ ] budget
+ - [ ] subscriptions

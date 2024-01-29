@@ -27,3 +27,6 @@ class User(db.Model, UserMixin):
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))
+
+class Account(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import db, login
@@ -15,6 +15,10 @@ class User(db.Model, UserMixin):
                                              unique=True)
     password_hash: so.Mapped[str] = so.mapped_column(sa.String(256))
 
+    accounts: so.Mapped[List['Account']] = so.relationship(
+        back_populates='user', cascade='all, delete-orphan'
+    )
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
     
@@ -30,3 +34,14 @@ def load_user(id):
 
 class Account(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    name: so.Mapped[str] = so.mapped_column(sa.String(64))
+    group: so.Mapped[str] = so.mapped_column(sa.String(64),
+                                             index=True)
+    metadata: so.Mapped[Optional[dict|list]] = so.mapped_column(sa.JSON)
+
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
+                                               index=True)
+    user: so.Mapped[User] = so.relationship(back_populates="accounts")
+
+    def __repr__(self) -> str:
+        return '<Account {},{}>'.format(self.id, self.name)

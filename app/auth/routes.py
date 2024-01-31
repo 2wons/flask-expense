@@ -6,7 +6,7 @@ from app.auth.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user
 import sqlalchemy as sa
 from app import db
-from app.models import User
+from app.models import User, Account
 from urllib.parse import urlsplit
 
 import sqlalchemy as sa
@@ -54,8 +54,14 @@ def register():
             last_name=form.last_name.data,
             email=form.email.data
         )
+        account = Account(
+            name="cash",
+            group="Cash",
+            user=user
+        )
         user.set_password(form.password.data)
         db.session.add(user)
+        db.session.add(account)
         db.session.commit()
 
         flash(f'Account created for {form.email.data}.', 'success')

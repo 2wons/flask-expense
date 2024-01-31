@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request
 from app.main import blueprint
 from app.main.util import get_accounts, get_categories
 from app.main.forms import AccountForm, ExpenseForm
@@ -39,10 +39,13 @@ def expenses():
         flash("Expense added.", "success")
         return redirect(url_for('main.expenses'))
 
-    expenses = db.session.query(Expense) \
-                         .join(Account) \
-                         .filter(Account.user_id == current_user.id) \
-                         .all()
+    page = request.args.get('page', 1, type=int)
+    expenses = Expense.query \
+                      .join(Account) \
+                      .filter(Account.user_id == current_user.id) \
+                      .order_by(Expense.date_spent.desc()) \
+                      .paginate(page=page, per_page=10)
+    
     return render_template('expenses.html', segment='expenses', expenses=expenses, form=form)
 
 

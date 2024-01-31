@@ -1,12 +1,13 @@
 # -*- encoding: utf-8 -*-
 
-from flask import render_template
+from flask import render_template, flash, redirect, url_for
 from app.main import blueprint
-from app.main.util import test_expenses
+from app.main.util import get_accounts, get_categories
+from app.main.forms import AccountForm, ExpenseForm
 
 import sqlalchemy as sa
 from app import db
-from app.models import User
+from app.models import Account, Expense
 
 from flask_login import current_user, login_required
 
@@ -15,12 +16,34 @@ from flask_login import current_user, login_required
 def home():
     return render_template('dashboard.html', segment='index')
 
-@blueprint.route('/expenses')
+@blueprint.route('/expenses', methods=['GET', 'POST'])
 @login_required
 def expenses():
     """manages expenses"""
-    expenses = test_expenses()
-    return render_template('expenses.html', segment='expenses', expenses=expenses)
+    form = ExpenseForm()
+    form.category.choices = get_categories()
+    form.account.choices = get_accounts()
+
+    if form.validate_on_submit():
+
+        expense = Expense(
+            name=form.name.data,
+            amount=form.amount.data,
+            date_spent=form.date_spent.data,
+            category=form.category.data,
+            note=form.note.data,
+            account_id=form.account.data
+        )
+        db.session.add(expense)
+        db.session.commit()
+        flash("Expense added.", "success")
+        return redirect(url_for('main.expenses'))
+
+    expenses = db.session.query(Expense) \
+                         .join(Account) \
+                         .filter(Account.user_id == current_user.id) \
+                         .all()
+    return render_template('expenses.html', segment='expenses', expenses=expenses, form=form)
 
 
 @blueprint.route('/income')
@@ -28,10 +51,25 @@ def expenses():
 def income():
     return render_template('income.html', segment='income')
 
-@blueprint.route('/test')
+@blueprint.route('/test', methods=['GET', 'POST'])
 @login_required
 def test():
-    return render_template('index.html', segment='blank')
+    form = AccountForm()
+
+    if form.validate_on_submit():
+
+        account = Account(
+            name=form.name.data,
+            group=form.group.data,
+            user=current_user
+        )
+        db.session.add(account)
+        db.session.commit()
+
+        flash('Account succesfully added.', 'success')
+        return redirect(url_for('main.test'))
+    
+    return render_template('index.html', segment='blank', form=form)
 
 @blueprint.route('/accounts/cash')
 @login_required

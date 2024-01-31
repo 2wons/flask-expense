@@ -1,4 +1,6 @@
 from typing import Optional, List
+from decimal import Decimal
+from datetime import date
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import db, login
@@ -37,11 +39,32 @@ class Account(db.Model):
     name: so.Mapped[str] = so.mapped_column(sa.String(64))
     group: so.Mapped[str] = so.mapped_column(sa.String(64),
                                              index=True)
-    metadata: so.Mapped[Optional[dict|list]] = so.mapped_column(sa.JSON)
+    metadata_json: so.Mapped[Optional[dict|list]] = so.mapped_column(sa.JSON)
 
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
                                                index=True)
     user: so.Mapped[User] = so.relationship(back_populates="accounts")
 
+    expenses: so.Mapped[List['Expense']] = so.relationship(
+        back_populates='account', cascade='all, delete-orphan'
+    )
+
     def __repr__(self) -> str:
         return '<Account {},{}>'.format(self.id, self.name)
+
+class Expense(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    name: so.Mapped[str] = so.mapped_column(sa.String(64),
+                                            index=True)
+    amount: so.Mapped[Decimal] = so.mapped_column(sa.Numeric(12, 2))
+    date_spent: so.Mapped[date] = so.mapped_column(sa.Date)
+    category: so.Mapped[str] = so.mapped_column(sa.String(32),
+                                                index=True)
+    note: so.Mapped[Optional[str]] = so.mapped_column(sa.String(80))
+    
+    account_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Account.id),
+                                                  index=True)
+    account: so.Mapped[Account] = so.relationship(back_populates='expenses')
+
+    def __repr__(self) -> str:
+        return '<Expense {},{}>'.format(self.id, self.category)

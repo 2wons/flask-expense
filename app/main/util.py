@@ -1,3 +1,5 @@
+from flask_login import current_user
+
 
 def test_expenses():
     expenses = [
@@ -68,3 +70,25 @@ def test_expenses():
     ]
 
     return expenses
+
+def get_categories():
+
+    categories = [
+        'Food',
+        'Grocery',
+        'Medical',
+        'Bills',
+        'Entertainment',
+        'Shopping',
+        'Travel',
+        'Debt',
+        'Loan',
+        'Other'
+    ]
+
+    return [(category, category) for category in categories]
+
+def get_accounts():
+
+    accounts = [(account.id, account.name) for account in current_user.accounts]
+    return accounts

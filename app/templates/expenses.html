@@ -36,53 +36,23 @@
                     </button>
                     
                     <!-- Modal Todo: separate -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                             <h1 class="modal-title fs-3" id="exampleModalLabel">Add Expense</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                              <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Name</label>
-                                <input type="text" class="form-control" placeholder="Cat food">
+                            <form action="" method="post" novalidate>
+                              {{ form.hidden_tag() }}
+                              <div class="modal-body">
+                                {% include 'add_expense_page.html' %}
                               </div>
-                              <label for="exampleFormControlInput1" class="form-label">Price</label>
-                              <div class="input-group mb-3">
-                                <span class="input-group-text">$</span>
-                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                                <span class="input-group-text">.00</span>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                {{ form.submit(class="btn btn-primary") }}
                               </div>
-                              <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Date spent</label>
-                                <input type="date" class="form-control" id="datepicker">
-                              </div>
-                              <div class="mb-3">
-                                <label for="category-select" class="form-label">Category</label>
-                                <select class="form-select" aria-label="category-select">
-                                  <option value="1">Food</option>
-                                  <option value="2">Two</option>
-                                  <option value="3">Three</option>
-                                </select>
-                              </div>
-                              <div class="mb-3">
-                                <label for="source-select" class="form-label">Source</label>
-                                <select class="form-select" aria-label="category-select">
-                                  <option value="1">Cash</option>
-                                  <option value="2">Two</option>
-                                  <option value="3">Three</option>
-                                </select>
-                              </div>
-                              <div class="input-group">
-                                <span class="input-group-text">Notes</span>
-                                <textarea class="form-control" aria-label="With textarea"></textarea>
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Add</button>
-                            </div>
+                            </form>
                         </div>
                         </div>
                     </div>
@@ -110,7 +80,7 @@
                             <td> {{ expense.amount }} </td>
                             <td> {{ expense.date_spent }} </td>
                             <td> {{ expense.category }} </td>
-                            <td> {{ expense.paid_via }} </td>
+                            <td> {{ expense.account.name }} </td>
                             <td> {{ expense.note }} </td>
                           </tr>
                         {% endfor %}
@@ -123,3 +93,13 @@
 
 </div>
 {% endblock content %}
+{% block javascripts %}
+  {% if form.errors %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script>
+      $(window).on('load', function() {
+        $('#exampleModal').modal('show');
+    });
+    </script>
+  {% endif %}
+{% endblock javascripts %}

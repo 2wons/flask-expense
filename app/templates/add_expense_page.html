@@ -1,0 +1,59 @@
+
+<div class="mb-3">
+    <!-- <label for="exampleFormControlInput1" class="form-label">Name</label>
+    <input type="text" class="form-control" placeholder="Cat food"> -->
+
+    {{ form.name.label(class="form-label") }}
+    {{ form.name(class="form-control" + (' is-invalid' if form.name.errors else ''), placeholder="Cat Food") }}
+    <div class="invalid-feedback">
+        {% for error in form.name.errors %}
+            <span> {{ error }} </span>
+        {% endfor %}
+    </div>
+  </div>
+  {{ form.amount.label(class="form-label") }}
+  <div class="input-group mb-3">
+    <span class="input-group-text">$</span>
+    {{ form.amount(class="form-control" + (' is-invalid' if form.amount.errors else ''), placeholder="199") }}
+    <div class="invalid-feedback">
+        {% for error in form.name.errors %}
+            {{ error }} 
+        {% endfor %}
+    </div>
+  </div>
+  <div class="mb-3">
+    {{ form.date_spent.label(class="form-label") }}
+    {{ form.date_spent(class="form-control" + (' is-invalid' if form.date_spent.errors else '') ) }}
+    <div class="invalid-feedback">
+        {% for error in form.date_spent.errors %}
+            <span> {{ error }} </span>
+        {% endfor %}
+    </div>
+  </div>
+  <div class="mb-3">
+    {{ form.category.label(class="form-label") }}
+    {{ form.category(class="form-select" + (' is-invalid' if form.category.errors else '') ) }}
+    <div class="invalid-feedback">
+        {% for error in form.category.errors %}
+            <span> {{ error }} </span>
+        {% endfor %}
+    </div>
+  </div>
+  <div class="mb-3">
+    {{ form.account.label(class="form-label") }}
+    {{ form.account(class="form-select" + (' is-invalid' if form.account.errors else '') ) }}
+    <div class="invalid-feedback">
+        {% for error in form.account.errors %}
+            <span> {{ error }} </span>
+        {% endfor %}
+    </div>
+  </div>
+  <div class="input-group">
+    <span class="input-group-text">Notes</span>
+    {{ form.note(class="form-control" + (' is-invalid' if form.note.errors else ''), placeholder="Additional notes") }}
+    <div class="invalid-feedback">
+        {% for error in form.note.errors %}
+            <span> {{ error }} </span>
+        {% endfor %}
+    </div>
+  </div>

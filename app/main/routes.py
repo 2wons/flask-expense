@@ -3,11 +3,11 @@
 from flask import render_template, flash, redirect, url_for, request
 from app.main import blueprint
 from app.main.util import get_accounts, get_categories
-from app.main.forms import AccountForm, ExpenseForm
+from app.main.forms import AccountForm, ExpenseForm, IncomeForm
 
 import sqlalchemy as sa
 from app import db
-from app.models import Account, Expense
+from app.models import Account, Expense, Income
 
 from flask_login import current_user, login_required
 
@@ -52,6 +52,25 @@ def expenses():
 @blueprint.route('/income')
 @login_required
 def income():
+    form = IncomeForm()
+    form.category.choices = get_categories()
+    form.account.choices = get_accounts()
+
+    if form.validate_on_submit():
+
+        income = Income(
+            name=form.name.data,
+            amount=form.amount.data,
+            date_received=form.date_received.data,
+            category=form.category.data,
+            note=form.note.data,
+            account_id=form.account.data
+        )
+        db.session.add(income)
+        db.session.commit()
+        flash("Income added.", "success")
+        return redirect(url_for('main.income'))
+
     return render_template('income.html', segment='income')
 
 @blueprint.route('/test', methods=['GET', 'POST'])

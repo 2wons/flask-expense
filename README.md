@@ -7,8 +7,8 @@
 
 ### Todo
 - add
- - [ ] accounts
- - [ ] expense
+ - [X] accounts
+ - [X] expense
  - [ ] income
  - [ ] budget
  - [ ] subscriptions

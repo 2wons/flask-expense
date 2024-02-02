@@ -70,47 +70,17 @@ class Record(db.Model):
     account: so.Mapped[Account] = so.relationship(back_populates='records')
 
     @classmethod
-    def get_expenses(cls):
-        return cls.query.filter_by(type='expense').all()
+    def get_expenses_from_user(cls, user_id):
+        return cls.query.join(Account) \
+                        .filter(Account.user_id == user_id) \
+                        .filter(Record.type=='expense')
     
     @classmethod
-    def get_incomes(cls):
-        return cls.query.filter_by(type='income').all()
+    def get_incomes_from_user(cls, user_id):
+        return cls.query.join(Account) \
+                        .filter(Account.user_id == user_id) \
+                        .filter(Record.type=='income')
 
 
     def __repr__(self) -> str:
         return '<Account {},{}>'.format(self.id, self.category)
-
-class Expense(db.Model):
-    id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    name: so.Mapped[str] = so.mapped_column(sa.String(64),
-                                            index=True)
-    amount: so.Mapped[Decimal] = so.mapped_column(sa.Numeric(12, 2))
-    date_spent: so.Mapped[date] = so.mapped_column(sa.Date)
-    category: so.Mapped[str] = so.mapped_column(sa.String(32),
-                                                index=True)
-    note: so.Mapped[Optional[str]] = so.mapped_column(sa.String(80))
-    
-    account_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Account.id),
-                                                  index=True)
-    account: so.Mapped[Account] = so.relationship(back_populates='expenses')
-
-    def __repr__(self) -> str:
-        return '<Expense {},{}>'.format(self.id, self.category)
-
-class Income(db.Model):
-    id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    name: so.Mapped[str] = so.mapped_column(sa.String(64),
-                                            index=True)
-    amount: so.Mapped[Decimal] = so.mapped_column(sa.Numeric(12, 2))
-    date_received: so.Mapped[date] = so.mapped_column(sa.Date)
-    category: so.Mapped[str] = so.mapped_column(sa.String(32),
-                                                index=True)
-    note: so.Mapped[Optional[str]] = so.mapped_column(sa.String(80))
-    
-    account_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Account.id),
-                                                  index=True)
-    account: so.Mapped[Account] = so.relationship(back_populates='incomes')
-
-    def __repr__(self) -> str:
-        return '<Income {},{}>'.format(self.id, self.category)

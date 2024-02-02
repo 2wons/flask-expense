@@ -3,7 +3,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from app.main import blueprint
 from app.main.util import get_accounts, get_categories
-from app.main.forms import AccountForm, ExpenseForm, IncomeForm
+from app.main.forms import AccountForm, RecordForm
 
 import sqlalchemy as sa
 from app import db
@@ -20,7 +20,7 @@ def home():
 @login_required
 def expenses():
     """manages expenses"""
-    form = ExpenseForm()
+    form = RecordForm()
     form.category.choices = get_categories()
     form.account.choices = get_accounts()
 

@@ -14,14 +14,14 @@ from flask_login import current_user, login_required
 @blueprint.route('/home')
 @login_required
 def home():
-    return render_template('dashboard.html', segment='index')
+    return render_template('dashboard.html')
 
 @blueprint.route('/expenses', methods=['GET', 'POST'])
 @login_required
 def expenses():
     """manages expenses"""
     form = RecordForm()
-    form.category.choices = get_categories()
+    form.category.choices = get_categories("expense")
     form.account.choices = get_accounts()
 
     if form.validate_on_submit():
@@ -46,15 +46,42 @@ def expenses():
         .order_by(Record.date.desc()) \
         .paginate(page=page, per_page=10)
     
-    return render_template('expenses.html', segment='expenses', expenses=expenses, form=form)
+    return render_template('expenses.html', expenses=expenses, form=form)
 
 
-@blueprint.route('/income')
+@blueprint.route('/income', methods=['GET', 'POST'])
 @login_required
 def income():
-    return render_template('income.html', segment='income')
+    form = RecordForm()
+    form.category.choices = get_categories("income")
+    form.account.choices = get_accounts()
 
-@blueprint.route('/account', methods=['GET', 'POST'])
+    if form.validate_on_submit():
+
+        income = Record(
+            name=form.name.data,
+            amount=form.amount.data,
+            date=form.date_spent.data,
+            category=form.category.data,
+            note=form.note.data,
+            type='income',
+            account_id=form.account.data
+        )
+        db.session.add(income)
+        db.session.commit()
+        flash("income added.", "success")
+        return redirect(url_for('main.income'))
+
+    page = request.args.get('page', 1, type=int)
+
+    incomes = Record.get_incomes_from_user(current_user.id) \
+        .order_by(Record.date.desc()) \
+        .paginate(page=page, per_page=10)
+
+    form.account.choices = get_accounts()
+    return render_template('income.html', incomes=incomes, form=form)
+
+@blueprint.route('/add-account', methods=['GET', 'POST'])
 @login_required
 def create_account():
     form = AccountForm()
@@ -70,21 +97,21 @@ def create_account():
         db.session.commit()
 
         flash('Account succesfully added.', 'success')
-        return redirect(url_for('main.test'))
+        return redirect(url_for('main.create_account'))
     
-    return render_template('index.html', segment='blank', form=form)
+    return render_template('index.html', form=form)
 
 @blueprint.route('/accounts/cash')
 @login_required
 def accounts_cash():
-    return render_template('accounts.html', segment='accounts/cash')
+    return render_template('accounts.html')
 
 @blueprint.route('/accounts/banks')
 @login_required
 def accounts_banks():
-    return render_template('accounts.html', segment='accounts/banks')
+    return render_template('accounts.html')
 
 @blueprint.route('/accounts/credit')
 @login_required
 def accounts_credit():
-    return render_template('accounts.html', segment='accounts/credit')
+    return render_template('accounts.html')

@@ -1,112 +1,91 @@
 {% extends 'layouts/base.html' %}
-
+{% import 'includes/pagination.html' as pager %}
 {% block title %} Expenses {% endblock title %}
 
 {% block content %}
 <div class="container-fluid p-0">
 
-    <h1 class="h3 mb-3">Expenses</h1>
+  <h1 class="h3 mb-3">Expenses</h1>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title mb-0">Expense Summary</h2>
-                
-                    <!-- Pagination -->
-                    <nav aria-label="Page navigation example">
-                        {% set current_page = request.args.get('page', '1') | int %}
-                        <ul class="pagination justify-content-end">
-                          <li class="page-item {{ 'disabled' if current_page == 1 else '' }}">
-                            <a class="page-link" href="{{ url_for('main.expenses', page=current_page-1) }}">Previous</a>
-                          </li>
-                          {% for page_num in expenses.iter_pages()  %}
-                            {% if page_num %}
-                              <li class="page-item"><a href="{{ url_for('main.expenses', page=page_num) }}" class="page-link"> {{ page_num }} </a></li>
-                            {% else %}
-                              <li class="page-item disabled">
-                                <a class="page-link">...</a>
-                              </li>
-                            {% endif %}
-                          {% endfor %}
-                          <li class="page-item {{ 'disabled' if current_page == expenses.pages else '' }}">
-                            <a class="page-link" href="{{ url_for('main.expenses', page=current_page+1) }}">Next</a>
-                          </li>
-                        </ul>
-                      </nav>
-                    <!-- Pagination -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title mb-0">Expense Summary</h2>
 
-                    <!-- Modal Button-->
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Add Expense
-                    </button>
-                    
-                    <!-- Modal Todo: separate -->
-                      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title fs-3" id="exampleModalLabel">Add Expense</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form action="" method="post" novalidate>
-                              {{ form.hidden_tag() }}
-                              <div class="modal-body">
-                                {% include 'add_expense_page.html' %}
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                {{ form.submit(class="btn btn-primary") }}
-                              </div>
-                            </form>
-                        </div>
-                        </div>
-                    </div>
-                    <!-- Modal Button-->
+          {{ pager.pagination('main.expenses', expenses) }}
+          
+          <!-- Modal Button-->
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add Expense
+          </button>
 
+          <!-- Modal Todo: separate -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-3" id="exampleModalLabel">Add Expense</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="card-body">
-                    <table class="table">
-                      <thead class="table-light">
-                        <tr>
-                          <th scope="row">#</th>
-                          <th scope="row">Name</th>
-                          <th scope="row">Amount</th>
-                          <th scope="row">Date Spent</th>
-                          <th scope="row">Category</th>
-                          <th scope="row">Paid Via</th>
-                          <th scope="row">Note</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for expense in expenses.items %}
-                          <tr>
-                            <th scope="row"> {{ loop.index }} </th>
-                            <td> {{ expense.name }} </td>
-                            <td> {{ expense.amount }} </td>
-                            <td> {{ expense.date }} </td>
-                            <td> {{ expense.category }} </td>
-                            <td> {{ expense.account.name }} </td>
-                            <td> {{ expense.note }} </td>
-                          </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                </div>
+                <form action="" method="post" novalidate>
+                  {{ form.hidden_tag() }}
+                  <div class="modal-body">
+                    {% include 'add_expense_page.html' %}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {{ form.submit(class="btn btn-primary") }}
+                  </div>
+                </form>
+              </div>
             </div>
+          </div>
+
         </div>
+        <div class="card-body">
+          <!-- Summary Table -->
+          <table class="table table-hover table-striped">
+            <thead class="table-light">
+              <tr>
+                <th scope="row">#</th>
+                <th scope="row">Name</th>
+                <th scope="row">Amount</th>
+                <th scope="row">Date Spent</th>
+                <th scope="row">Category</th>
+                <th scope="row">Paid Via</th>
+                <th scope="row">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for expense in expenses.items %}
+              <tr>
+                <th scope="row"> {{ loop.index }} </th>
+                <td> {{ expense.name }} </td>
+                <td> $ {{ expense.amount }} </td>
+                <td> {{ expense.date }} </td>
+                <td> {{ expense.category }} </td>
+                <td> {{ expense.account.name }} </td>
+                <td> {{ expense.note }} </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+  </div>
 
 </div>
 {% endblock content %}
 {% block javascripts %}
-  {% if form.errors %}
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script>
-      $(window).on('load', function() {
-        $('#exampleModal').modal('show');
-    });
-    </script>
-  {% endif %}
+{% if form.errors %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script>
+  $(window).on('load', function () {
+    $('#exampleModal').modal('show');
+  });
+</script>
+{% endif %}
 {% endblock javascripts %}

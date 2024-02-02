@@ -1,0 +1,25 @@
+<!-- Pagination -->
+{% macro pagination(path, set) %}
+    <nav aria-label="Page navigation example">
+        {% set current_page = request.args.get('page', '1') | int %}
+        <ul class="pagination justify-content-end">
+        <li class="page-item {{ 'disabled' if current_page == 1 else '' }}">
+            <a class="page-link" href="{{ url_for(path, page=current_page-1) }}">Previous</a>
+        </li>
+        {% for page_num in set.iter_pages() %}
+        {% if page_num %}
+        <li class="page-item"><a href="{{ url_for(path, page=page_num) }}" class="page-link"> {{
+            page_num }} </a></li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">...</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        <li class="page-item {{ 'disabled' if current_page == set.pages else '' }}">
+            <a class="page-link" href="{{ url_for(path, page=current_page+1) }}">Next</a>
+        </li>
+        </ul>
+    </nav>
+{% endmacro %}
+<!-- Pagination -->

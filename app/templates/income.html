@@ -1,78 +1,146 @@
 {% extends 'layouts/base.html' %}
+{% import 'includes/pagination.html' as pager %}
 
 {% block title %} Income {% endblock title %}
 
 {% block content %}
 <div class="container-fluid p-0">
 
-    <h1 class="h3 mb-3">Income</h1>
-
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Empty card</h5>
-                    <!-- Breadcrumbs -->
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                          <li class="breadcrumb-item"><a href="#">Home</a></li>
-                          <li class="breadcrumb-item"><a href="#">Library</a></li>
-                          <li class="breadcrumb-item active" aria-current="page">Data</li>
-                        </ol>
-                    </nav>
-                    <!-- Breadcrumbs -->
-
-                    <!-- Pagination -->
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-end">
-                          <li class="page-item disabled">
-                            <a class="page-link">Previous</a>
-                          </li>
-                          <li class="page-item"><a class="page-link" href="#">1</a></li>
-                          <li class="page-item"><a class="page-link" href="#">2</a></li>
-                          <li class="page-item"><a class="page-link" href="#">3</a></li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                          </li>
-                        </ul>
-                      </nav>
-                    <!-- Pagination -->
-
-                    <!-- Modal Button-->
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Launch demo modal
-                    </button>
-                    
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                            ...
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    <!-- Modal Button-->
-
-                </div>
-                <div class="card-body">
-                    
-                    
-
-                </div>
+  <h1 class="h3 mb-3">Income</h1>
+  <div class="row">
+    <div class="col-12 col-md-6 col-xxl d-flex">
+      <div class="card flex-fill">
+        <div class="card-body">
+          <div class="row">
+            <div class="col mt-0">
+              <h5 class="card-title">Total Incomes</h5>
             </div>
+
+            <div class="col-auto">
+              <div class="stat text-primary" >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart align-middle mr-2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+              </div>
+            </div>
+          </div>
+          <h4 class="mt-0 mb-1">$53,252 <span class="text-muted">2.30 BTC</span></h4>
+
+          <div class="mb-0">
+            <span class="text-success"> +6.15%  </span>
+            <span class="text-muted">Since last week</span>
+          </div>
+
         </div>
+      </div>
     </div>
+
+    <div class="col-12 col-md-6 col-xxl d-flex">
+      <div class="card flex-fill">
+        <div class="card-body">
+          <div class="row">
+            <div class="col mt-0">
+              <h5 class="card-title">Total Amount</h5>
+            </div>
+
+            <div class="col-auto">
+              <div class="stat text-primary" >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign align-middle"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </div>
+            </div>
+          </div>
+          <h4 class="mt-0 mb-1">$53,252 <span class="text-muted">2.30 BTC</span></h4>
+
+          <div class="mb-0">
+            <span class="text-success"> +6.15%  </span>
+            <span class="text-muted">Since last week</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- ewnd -->
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Summary</h5>
+
+          {{ pager.pagination('main.income', incomes) }}
+          <!-- Modal Button-->
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add Income
+          </button>
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-3" id="exampleModalLabel">New Income</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="modal-body">
+                      {% include 'add_income_page.html' %}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body">
+          <!-- Summary Table -->
+          <table class="table table-hover table-striped">
+            <thead class="table-light">
+              <tr>
+                <th scope="row">#</th>
+                <th scope="row">Name</th>
+                <th scope="row">Amount</th>
+                <th scope="row">Date Received</th>
+                <th scope="row">Category</th>
+                <th scope="row">Paid Via</th>
+                <th scope="row">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for income in incomes.items %}
+                <tr>
+                  <th scope="row"> {{ loop.index }} </th>
+                  <td> {{ income.name }} </td>
+                  <td> {{ income.amount }} </td>
+                  <td> {{ income.date }} </td>
+                  <td> {{ income.category }} </td>
+                  <td> {{ income.account.name }} </td>
+                  <td> {{ income.note }} </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 {% endblock content %}
+
+{% block javascripts %}
+  {% if form.errors %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script>
+      $(window).on('load', function() {
+        $('#exampleModal').modal('show');
+    });
+    </script>
+  {% endif %}
+{% endblock javascripts %}

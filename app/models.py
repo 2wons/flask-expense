@@ -1,3 +1,4 @@
+from turtle import back
 from typing import Optional, List
 from decimal import Decimal
 from datetime import date
@@ -45,16 +46,40 @@ class Account(db.Model):
                                                index=True)
     user: so.Mapped[User] = so.relationship(back_populates="accounts")
 
-    expenses: so.Mapped[List['Expense']] = so.relationship(
-        back_populates='account', cascade='all, delete-orphan'
-    )
-
-    incomes: so.Mapped[List['Income']] = so.relationship(
+    records: so.Mapped[List['Record']] = so.relationship(
         back_populates='account', cascade='all, delete-orphan'
     )
 
     def __repr__(self) -> str:
         return '<Account {},{}>'.format(self.id, self.name)
+
+class Record(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    name: so.Mapped[str] = so.mapped_column(sa.String(64),
+                                            index=True)
+    amount: so.Mapped[Decimal] = so.mapped_column(sa.Numeric(12,2))
+    date: so.Mapped[date] = so.mapped_column(sa.Date)
+    category: so.Mapped[str] = so.mapped_column(sa.String(32),
+                                                index=True)
+    type: so.Mapped[str] = so.mapped_column(sa.String(16),
+                                             index=True)
+    note: so.Mapped[Optional[str]] = so.mapped_column(sa.String(80))
+
+    account_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Account.id),
+                                                  index=True)
+    account: so.Mapped[Account] = so.relationship(back_populates='records')
+
+    @classmethod
+    def get_expenses(cls):
+        return cls.query.filter_by(type='expense').all()
+    
+    @classmethod
+    def get_incomes(cls):
+        return cls.query.filter_by(type='income').all()
+
+
+    def __repr__(self) -> str:
+        return '<Account {},{}>'.format(self.id, self.category)
 
 class Expense(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)

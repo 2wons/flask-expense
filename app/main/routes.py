@@ -7,7 +7,7 @@ from app.main.forms import AccountForm, ExpenseForm, IncomeForm
 
 import sqlalchemy as sa
 from app import db
-from app.models import Account, Expense, Income, Record
+from app.models import Account, Record
 
 from flask_login import current_user, login_required
 
@@ -32,6 +32,7 @@ def expenses():
             date=form.date_spent.data,
             category=form.category.data,
             note=form.note.data,
+            type='expense',
             account_id=form.account.data
         )
         db.session.add(expense)

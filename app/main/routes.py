@@ -26,10 +26,10 @@ def expenses():
 
     if form.validate_on_submit():
 
-        expense = Expense(
+        expense = Record(
             name=form.name.data,
-            amount=form.amount.data,
-            date_spent=form.date_spent.data,
+            amount=-form.amount.data,
+            date=form.date_spent.data,
             category=form.category.data,
             note=form.note.data,
             account_id=form.account.data
@@ -40,12 +40,10 @@ def expenses():
         return redirect(url_for('main.expenses'))
 
     page = request.args.get('page', 1, type=int)
-    expenses = Record.query \
-                      .join(Account) \
-                      .filter(Account.user_id == current_user.id) \
-                      .filter(Record.type == 'expense') \
-                      .order_by(Record.date.desc()) \
-                      .paginate(page=page, per_page=10)    
+
+    expenses = Record.get_expenses_from_user(current_user.id) \
+        .order_by(Record.date.desc()) \
+        .paginate(page=page, per_page=10)
     
     return render_template('expenses.html', segment='expenses', expenses=expenses, form=form)
 
@@ -55,9 +53,9 @@ def expenses():
 def income():
     return render_template('income.html', segment='income')
 
-@blueprint.route('/test', methods=['GET', 'POST'])
+@blueprint.route('/account', methods=['GET', 'POST'])
 @login_required
-def test():
+def create_account():
     form = AccountForm()
 
     if form.validate_on_submit():
@@ -89,23 +87,3 @@ def accounts_banks():
 @login_required
 def accounts_credit():
     return render_template('accounts.html', segment='accounts/credit')
-
-@blueprint.route('/migrate_data')
-def migrate_data():
-    # Move expense data to Record table
-    expenses = db.session.query(Expense).all()
-    for e in expenses:
-        r = Record(
-            name = e.name,
-            amount = -e.amount,
-            date = e.date_spent,
-            category = e.category,
-            note = e.note,
-            type = 'expense',
-            account = e.account
-        )
-        db.session.add(r)
-        db.session.delete(e)
-    
-    db.session.commit()
-    return "<h1>Data Migrated successfully</h1>"

@@ -12,11 +12,12 @@
             page_num }} </a></li>
         {% else %}
         <li class="page-item disabled">
-            <a class="page-link">...</a>
+            <a class="page-link">...</a>    
         </li>
         {% endif %}
         {% endfor %}
-        <li class="page-item {{ 'disabled' if current_page == set.pages else '' }}">
+        {% set is_disabled = request.args.get('page', '69') | int %}
+        <li class="page-item {{ 'disabled' if (is_disabled == 69 or current_page == set.pages) else '' }}">
             <a class="page-link" href="{{ url_for(path, page=current_page+1) }}">Next</a>
         </li>
         </ul>

@@ -81,6 +81,13 @@ def income():
     form.account.choices = get_accounts()
     return render_template('income.html', incomes=incomes, form=form)
 
+@blueprint.route('/income/<int:record_id>/update', methods=['PUT'])
+@login_required
+def update_income(record_id):
+    record = Record.query.get_or_404(record_id)
+
+    
+
 @blueprint.route('/add-account', methods=['GET', 'POST'])
 @login_required
 def create_account():

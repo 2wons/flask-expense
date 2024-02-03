@@ -1,0 +1,26 @@
+
+{% macro stat_card(title, icon, data, subtitle ) %}
+<div class="col-12 col-md-6 col-xxl d-flex">
+    <div class="card flex-fill">
+      <div class="card-body">
+        <div class="row">
+          <div class="col mt-0">
+            <h5 class="card-title">{{ title }}</h5>
+          </div>
+
+          <div class="col-auto">
+            <div class="stat text-primary" >
+              <i data-feather="{{ icon }}"></i>
+            </div>
+          </div>
+        </div>
+        <h4 class="mt-0 mb-1">{{ data }} <span class="text-muted">2.30 BTC</span></h4>
+
+        <div class="mb-0">
+            {{ subtitle | safe }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endmacro %}

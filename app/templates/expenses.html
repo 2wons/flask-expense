@@ -1,12 +1,12 @@
 {% extends 'layouts/base.html' %}
 {% import 'includes/pagination.html' as pager %}
 {% import 'cards.html' as card %}
-{% block title %} Expenses {% endblock title %}
+{% block title %} {{ legend }} {% endblock title %}
 
 {% block content %}
 <div class="container-fluid p-0">
 
-  <h1 class="h3 mb-3">Expenses</h1>
+  <h1 class="h3 mb-3">{{ legend }}</h1>
   <div class="row">
     {{ card.stat_card('Total Count', 'dollar-sign', count, 
           '<span class="text-success"> +6.15%  </span> <span class="text-success"> +6.15%  </span>') }}
@@ -20,13 +20,18 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title mb-0">Expense Summary</h2>
+          <h2 class="card-title mb-0">{{ legend }} Summary</h2>
 
-          {{ pager.pagination('expenses.home', expenses, count) }}
+          {% if legend == 'Expense' %}
+            {{ pager.pagination('expenses.home', results, count) }}
+          {% else %}
+            {{ pager.pagination('incomes.home', results, count) }}
+          {% endif %}
+         
           
           <!-- Modal Button-->
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Add Expense
+            Add {{ legend }}
           </button>
 
           <!-- Modal Todo: separate -->
@@ -35,7 +40,7 @@
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-3" id="exampleModalLabel">Add Expense</h1>
+                  <h1 class="modal-title fs-3" id="exampleModalLabel">Add {{ legend }}</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="" method="post" novalidate>
@@ -52,16 +57,39 @@
             </div>
           </div>
 
+          <!-- Delete confirmation -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="confirm-delete" tabindex="-1" aria-labelledby="confirm-delete-label" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Delete</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to Delete?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form id="deleteForm" method="POST">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
         </div>
         <div class="card-body">
           <!-- Summary Table -->
           <table class="table table-hover table-striped">
             <thead class="table-light">
               <tr>
-                <th scope="row">#</th>
                 <th scope="row">Name</th>
                 <th scope="row">Amount</th>
-                <th scope="row">Date Spent</th>
+                <th scope="row">{{ 'Date Spent' if legend == "Expense" else 'Date Received' }}</th>
                 <th scope="row">Category</th>
                 <th scope="row">Paid Via</th>
                 <th scope="row">Note</th>
@@ -69,15 +97,28 @@
               </tr>
             </thead>
             <tbody>
-              {% for expense in expenses.items %}
+              {% for expense in results.items %}
               <tr>
-                <th scope="row"> {{ loop.index }} </th>
                 <td> {{ expense.name }} </td>
-                <td> $ {{ expense.amount }} </td>
+                <td class="text-danger"> $ {{ expense.amount }} </td>
                 <td> {{ expense.date }} </td>
                 <td> {{ expense.category }} </td>
                 <td> {{ expense.account.name }} </td>
                 <td> {{ expense.note }} </td>
+                <td class="table-action"> 
+                  {% if legend == 'Expense' %}
+                    <a href="{{ url_for('expenses.expense', record_id=expense.id) }}">
+                    
+                  {% else %}
+                    <a href="{{ url_for('incomes.income', record_id=expense.id) }}">
+                    
+                  {% endif %}
+                    <i data-feather="edit-2" class="feather"></i>
+                  </a>
+                  <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#confirm-delete" data-bs-record-id="{{ expense.id }}">
+                    <i data-feather="trash" class="feather"></i>
+                  </button>
+                </td>
               </tr>
               {% endfor %}
             </tbody>
@@ -98,4 +139,17 @@
   });
 </script>
 {% endif %}
+<script>
+  const confirmDeleteModal = document.getElementById('confirm-delete')
+  if (confirmDeleteModal) {
+    confirmDeleteModal.addEventListener('show.bs.modal', event => {
+      // Button that triggered the modal
+      const button = event.relatedTarget
+      // Extract info from data-bs-* attributes
+      const recipient = button.getAttribute('data-bs-record-id')
+      console.log(recipient)
+      document.getElementById('deleteForm').action = "/{{ 'expenses' if legend == 'Expense' else 'incomes' }}/" + recipient;
+    })
+  }
+</script>
 {% endblock javascripts %}

@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
 
 from flask import render_template, flash, redirect, url_for, request, session, current_app, abort
-from app.expenses import blueprint
+from app.incomes import blueprint
 from app.main.util import get_accounts, get_categories
-from app.main.forms import AccountForm, RecordForm
-import jsonpickle
+from app.main.forms import RecordForm
 
 import sqlalchemy as sa
 from app import db
@@ -18,40 +17,40 @@ import json
 def home():
     """manages expenses"""
     form = RecordForm()
-    form.category.choices = get_categories("expense")
+    form.category.choices = get_categories("income")
     form.account.choices = get_accounts()
 
     if form.validate_on_submit():
 
         expense = Record(
             name=form.name.data,
-            amount=-form.amount.data,
+            amount=form.amount.data,
             date=form.date_spent.data,
             category=form.category.data,
             note=form.note.data,
-            type='expense',
+            type='income',
             account_id=form.account.data
         )
         db.session.add(expense)
         db.session.commit()
-        flash("expense added.", "success")
-        return redirect(url_for('expenses.home'))
+        flash("income added.", "success")
+        return redirect(url_for('incomes.home'))
 
     page = request.args.get('page', 1, type=int)
 
-    expenses = Record.get_expenses_from_user(current_user.id)
+    incomes = Record.get_incomes_from_user(current_user.id)
 
-    count = expenses.count()
-    # get the total sum of all expenses from user
-    sum = expenses.with_entities(
+    count = incomes.count()
+    # get the total sum of all incomes from user
+    sum = incomes.with_entities(
         sa.func.sum(Record.amount).label('total_amount')).scalar()
 
-    paginated_results = expenses.order_by(Record.date.desc()) \
+    paginated_results = incomes.order_by(Record.date.desc()) \
         .paginate(page=page, per_page=10)
 
     return render_template('expenses.html', 
                            results=paginated_results,
-                           legend="Expense",
+                           legend="Income",
                            count=count, 
                            sum=sum, 
                            form=form)
@@ -59,9 +58,9 @@ def home():
 
 @blueprint.route('<int:record_id>/', methods=['GET','POST'])
 @login_required
-def expense(record_id):
+def income(record_id):
     form = RecordForm()
-    form.category.choices = get_categories("expense")
+    form.category.choices = get_categories("income")
     form.account.choices = get_accounts()
     record = Record.query.get_or_404(record_id)
     account = Account.query.filter(Account.id == record.account_id).first()
@@ -73,7 +72,7 @@ def expense(record_id):
             db.session.delete(record)
             db.session.commit()
             flash('Record Successfully deleted', 'danger')
-            return redirect(url_for('expenses.home'))
+            return redirect(url_for('incomes.home'))
 
 
     if form.validate_on_submit():
@@ -85,7 +84,7 @@ def expense(record_id):
         record.account_id = form.account.data
         db.session.commit()
         flash('Record Successfully updated', 'success')
-        return redirect(url_for('expenses.expense', record_id=record.id))
+        return redirect(url_for('incomes.income', record_id=record.id))
 
     # pre-populate data with existing record details
     form.fill_from_record(record)

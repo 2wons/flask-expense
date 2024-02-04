@@ -26,7 +26,11 @@
                     </div>
                 </form>
                     <div class="col-4">
-                       <form action="{{ url_for('expenses.expense', record_id=item.id) }}" method="POST">
+                      {% if legend == "Expense" %}
+                        <form action="{{ url_for('expenses.expense', record_id=item.id) }}" method="POST">
+                      {% else %}
+                      <form action="{{ url_for('incomes.income', record_id=item.id) }}" method="POST">
+                      {% endif %}
                         <input type="hidden" name="_method" value="DELETE">
                         <button class="btn btn-danger" type="submit">Delete</button>
                        </form>

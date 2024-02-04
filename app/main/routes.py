@@ -16,48 +16,6 @@ from flask_login import current_user, login_required
 def home():
     return render_template('dashboard.html')
 
-@blueprint.route('/income', methods=['GET', 'POST'])
-@login_required
-def income():
-    form = RecordForm()
-    form.category.choices = get_categories("income")
-    form.account.choices = get_accounts()
-
-    if form.validate_on_submit():
-
-        income = Record(
-            name=form.name.data,
-            amount=form.amount.data,
-            date=form.date_spent.data,
-            category=form.category.data,
-            note=form.note.data,
-            type='income',
-            account_id=form.account.data
-        )
-        db.session.add(income)
-        db.session.commit()
-        flash("income added.", "success")
-        return redirect(url_for('main.income'))
-
-    page = request.args.get('page', 1, type=int)
-
-    incomes = Record.get_incomes_from_user(current_user.id)
-    
-    count = incomes.count()
-    paged_incomes = incomes.order_by(Record.date.desc()) \
-        .paginate(page=page, per_page=10)
-    sum = incomes.with_entities(sa.func.sum(Record.amount).label('total_amount')).scalar()
-
-    form.account.choices = get_accounts()
-    return render_template('income.html', incomes=paged_incomes, count=count, sum=sum, form=form)
-
-@blueprint.route('/income/<int:record_id>/update', methods=['PUT'])
-@login_required
-def update_income(record_id):
-    record = Record.query.get_or_404(record_id)
-
-    
-
 @blueprint.route('/add-account', methods=['GET', 'POST'])
 @login_required
 def create_account():

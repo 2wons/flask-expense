@@ -24,8 +24,13 @@ def create_app(config_class = Config):
     from app.auth import blueprint as auth_bp
     app.register_blueprint(auth_bp)
 
+    from app.expenses import blueprint as expenses_bp
+    app.register_blueprint(expenses_bp)
+
     from app.main import blueprint as main_bp
     app.register_blueprint(main_bp)
+
+    
 
 
     return app

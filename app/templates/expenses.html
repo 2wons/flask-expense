@@ -1,11 +1,20 @@
 {% extends 'layouts/base.html' %}
 {% import 'includes/pagination.html' as pager %}
+{% import 'cards.html' as card %}
 {% block title %} Expenses {% endblock title %}
 
 {% block content %}
 <div class="container-fluid p-0">
 
   <h1 class="h3 mb-3">Expenses</h1>
+  <div class="row">
+    {{ card.stat_card('Total Count', 'dollar-sign', count, 
+          '<span class="text-success"> +6.15%  </span> <span class="text-success"> +6.15%  </span>') }}
+    {{ card.stat_card('Total Amount', 'dollar-sign', sum, 
+          '<span class="text-success"> +6.15%  </span> <span class="text-muted">Since last week</span>') }}
+  
+    <!-- ewnd -->
+  </div>
 
   <div class="row">
     <div class="col-12">
@@ -13,7 +22,7 @@
         <div class="card-header">
           <h2 class="card-title mb-0">Expense Summary</h2>
 
-          {{ pager.pagination('main.expenses', expenses) }}
+          {{ pager.pagination('expenses.home', expenses, count) }}
           
           <!-- Modal Button-->
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -56,6 +65,7 @@
                 <th scope="row">Category</th>
                 <th scope="row">Paid Via</th>
                 <th scope="row">Note</th>
+                <th scope="row">Action</th>
               </tr>
             </thead>
             <tbody>

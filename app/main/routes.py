@@ -16,39 +16,6 @@ from flask_login import current_user, login_required
 def home():
     return render_template('dashboard.html')
 
-@blueprint.route('/expenses', methods=['GET', 'POST'])
-@login_required
-def expenses():
-    """manages expenses"""
-    form = RecordForm()
-    form.category.choices = get_categories("expense")
-    form.account.choices = get_accounts()
-
-    if form.validate_on_submit():
-
-        expense = Record(
-            name=form.name.data,
-            amount=-form.amount.data,
-            date=form.date_spent.data,
-            category=form.category.data,
-            note=form.note.data,
-            type='expense',
-            account_id=form.account.data
-        )
-        db.session.add(expense)
-        db.session.commit()
-        flash("Expense added.", "success")
-        return redirect(url_for('main.expenses'))
-
-    page = request.args.get('page', 1, type=int)
-
-    expenses = Record.get_expenses_from_user(current_user.id) \
-        .order_by(Record.date.desc()) \
-        .paginate(page=page, per_page=10)
-    
-    return render_template('expenses.html', expenses=expenses, form=form)
-
-
 @blueprint.route('/income', methods=['GET', 'POST'])
 @login_required
 def income():
@@ -74,12 +41,15 @@ def income():
 
     page = request.args.get('page', 1, type=int)
 
-    incomes = Record.get_incomes_from_user(current_user.id) \
-        .order_by(Record.date.desc()) \
+    incomes = Record.get_incomes_from_user(current_user.id)
+    
+    count = incomes.count()
+    paged_incomes = incomes.order_by(Record.date.desc()) \
         .paginate(page=page, per_page=10)
+    sum = incomes.with_entities(sa.func.sum(Record.amount).label('total_amount')).scalar()
 
     form.account.choices = get_accounts()
-    return render_template('income.html', incomes=incomes, form=form)
+    return render_template('income.html', incomes=paged_incomes, count=count, sum=sum, form=form)
 
 @blueprint.route('/income/<int:record_id>/update', methods=['PUT'])
 @login_required

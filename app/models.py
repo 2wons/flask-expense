@@ -22,6 +22,10 @@ class User(db.Model, UserMixin):
         back_populates='user', cascade='all, delete-orphan'
     )
 
+    budgets: so.Mapped[List['Budget']] = so.relationship(
+        back_populates='user', cascade='all, delete-orphan'
+    )
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
     
@@ -84,3 +88,22 @@ class Record(db.Model):
 
     def __repr__(self) -> str:
         return '<Account {},{}>'.format(self.id, self.category)
+
+
+class Budget(db.Model):
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    year: so.Mapped[int] = so.mapped_column(sa.Integer,
+                                            index=True)
+    month: so.Mapped[int] = so.mapped_column(sa.Integer,
+                                             index=True)
+    amount: so.Mapped[Decimal] = so.mapped_column(sa.Numeric(12,2))
+
+    # store limits per category through json format
+    # {<category>: <limit_value>}
+    limits_dict: so.Mapped[Optional[dict|list]] = so.mapped_column(sa.JSON)
+
+    user_id = so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
+                                                index=True)
+
+    user = so.Mapped[User] = so.relationship(back_populates="budgets")

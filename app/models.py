@@ -103,7 +103,7 @@ class Budget(db.Model):
     # {<category>: <limit_value>}
     limits_dict: so.Mapped[Optional[dict|list]] = so.mapped_column(sa.JSON)
 
-    user_id = so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
                                                 index=True)
 
-    user = so.Mapped[User] = so.relationship(back_populates="budgets")
+    user: so.Mapped[User] = so.relationship(back_populates="budgets")

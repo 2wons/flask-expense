@@ -91,4 +91,4 @@ def expense(record_id):
     form.fill_from_record(record)
     form.submit.label.text = 'Update'
 
-    return render_template('record_item_page.html', form=form, item=record)
+    return render_template('record_item_page.html', form=form, item=record, legend="Expense")

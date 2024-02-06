@@ -27,8 +27,11 @@ def create_app(config_class = Config):
     from app.expenses import blueprint as expenses_bp
     app.register_blueprint(expenses_bp)
 
-    from app.incomes import blueprint as expenses_bp
-    app.register_blueprint(expenses_bp)
+    from app.incomes import blueprint as incomes_bp
+    app.register_blueprint(incomes_bp)
+
+    from app.budgets import blueprint as budgets_bp
+    app.register_blueprint(budgets_bp)
 
     from app.main import blueprint as main_bp
     app.register_blueprint(main_bp)

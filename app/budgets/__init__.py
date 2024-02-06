@@ -3,9 +3,9 @@
 from flask import Blueprint
 
 blueprint = Blueprint(
-    'budget',
+    'budgets',
     __name__,
-    url_prefix='/budget'
+    url_prefix='/budgets'
 )
 
 from app.budgets import routes

@@ -9,10 +9,33 @@ from app.models import Account, Record
 
 from flask_login import current_user, login_required
 
+budgets = {
+    "🍕 Food": {
+        "limit": 25000.00,
+        "spent": 500.00
+    },
+    "📄 Bill": {
+        "limit": 25000.00,
+        "spent": 500.00
+    },
+    "🎉Entertainment": {
+        "limit": 25000.00,
+        "spent": 500.00
+    },
+    "✈ Travel": {
+        "limit": 25000.00,
+        "spent": 500.00
+    },
+    "🔍 Other": {
+        "limit": 25000.00,
+        "spent": 500.00
+    },
+}
+
 @blueprint.route("/")
 @login_required
 def home():
-    return ""
+    return render_template('budgets.html', budgets=budgets)
 
 @blueprint.route("/new", methods=['GET', 'POST'])
 @login_required
@@ -24,7 +47,3 @@ def create():
 def view():
     return ""
 
-@blueprint.route("/")
-@login_required
-def home():
-    return ""

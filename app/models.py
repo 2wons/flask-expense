@@ -1,4 +1,3 @@
-from turtle import back
 from typing import Optional, List
 from decimal import Decimal
 from datetime import date
@@ -107,3 +106,11 @@ class Budget(db.Model):
                                                 index=True)
 
     user: so.Mapped[User] = so.relationship(back_populates="budgets")
+
+    __table_args__ = (
+        sa.UniqueConstraint('year', 'month', 'user_id', name='unique_year_month_user'),
+    )
+
+    @classmethod
+    def find_from_user_and_month(cls, user_id, year, month):
+        return cls.query.filter_by(user_id=user_id, year=year, month=month).first()

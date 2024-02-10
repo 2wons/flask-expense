@@ -1,0 +1,90 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Budget Setting {% endblock title %}
+
+{% block content %}
+<div class="container-fluid p-0">
+ 
+    {% if legend == "update" %}
+      <a href="{{ url_for('budgets.view', year=year, month=month) }}" class="btn btn-light">
+        <i data-feather="arrow-left"></i><span class="ms-2">Back</span>
+      </a>
+    {% endif %}
+    <h1 class="h3 mb-3">{{ legend | capitalize }} Budget</h1>
+
+  <div class="row justify-content-md-center">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">{{ legend | capitalize }} Budget Setting</h5>
+
+        </div>
+        <div class="card-body">
+            <form action="" method="post" novalidate>
+              {{ form.hidden_tag() }}
+              <div class="d-flex flew-row">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Year</span>
+                  {% if legend == "update" %}
+                    {{ form.year(class="form-select", disabled='disabled') }}
+                  {% else %}
+                    {{ form.year(class="form-select" + (' is-invalid' if form.year.errors else '') ) }}
+                  {% endif %}
+                  <div class="invalid-feedback">
+                      {% for error in form.year.errors %}
+                          <span> {{ error }} </span>
+                      {% endfor %}
+                  </div>
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Month</span>
+                  {% if legend == "update" %}
+                    {{ form.month(class="form-select", disabled='disabled') }}
+                  {% else %}
+                    {{ form.month(class="form-select" + (' is-invalid' if form.month.errors else '') ) }}
+                  {% endif %}
+                  <div class="invalid-feedback">
+                      {% for error in form.month.errors %}
+                          <span> {{ error }} </span>
+                      {% endfor %}
+                  </div>
+                </div>
+                </div>
+              <div class="container">
+                {% for field in form  %}
+                  {% if field.name.endswith('_limit') %}
+                    <div class="row mb-3 px-3">
+                      <div class="col-3">
+                        <label class="form-label">{{ field.label.text.replace('_', ' ') }}</label>
+                      </div>
+                      <div class="col-5">
+                        <div class="input-group mb-3">
+                          <span class="input-group-text">$</span>
+                          {{ field(class="form-control" + (' is-invalid' if field.errors else ''), placeholder="199") }}
+                          <div class="invalid-feedback">
+                            {% for error in field.errors %}
+                                {{ error }} 
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    <div class="d-flex flex-row-reverse">
+                      {{ form.submit(class="btn btn-primary") }}
+                    </div>
+              </div>
+                
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+  
+{% endblock javascripts %}

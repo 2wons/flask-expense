@@ -1,28 +1,83 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %} Accounts {% endblock title %}
+{% block title %} Budget {% endblock title %}
+
+{% if legend == "empty" %}
+  
+{% else %}
+  
+{% endif %}
 
 {% block content %}
 <div class="container-fluid p-0">
 
-  <h1 class="h3 mb-3">Budgets</h1>
+ 
+  <!-- <h1 class="h3 mb-3">Budgets</h1> -->
+  <div class="d-flex flex-row">
+
+    {% for b_year in all_budgets.keys() %}
+      {% if b_year == year %}
+        <h1 class="h3 me-2">
+          <span class="fw-bold">
+            <a href="{{ url_for('budgets.view', month=1, year=b_year ) }}" class="text-dark">{{ b_year }}</a>
+          </span>
+        </h1>
+      {% else %}
+        <h1 class="h3 fw-bold me-2"><a href="{{ url_for('budgets.view', month=1, year=b_year ) }}" class="text-secondary">{{ b_year }}</a></h1>
+      {% endif %}
+    {% endfor %}
+  <h1 class="h3 mb-3"> Budgets</h1>
+
+  </div>
+  <div class="btn-toolbar mb-2">
+    <div class="btn-group me-2">
+      {% for smonth in range(1, 13) %}
+      {% set month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][smonth-1] %}
+      <a href="{{ url_for('budgets.view', month=smonth, year=year) }}" class="btn btn-light {{ 'fw-bold' if smonth == month }} {{ 'disabled' if smonth not in all_budgets[year] }}">{{ month_name }}</a>
+    {% endfor %}
+    </div>
+    <div class="btn-group me-2">
+      <a href="{{ url_for('budgets.view', month=month-1, year=year) }}" class="btn btn-dark {{ 'disabled' if month == 1 }}">Prev</a>
+      <a href="{{ url_for('budgets.view', month=month+1, year=year) }}" class="btn btn-dark {{ 'disabled' if month == 12 }}">Next</a>
+    </div>
+    <div class="btn-group me-2">
+      <a href="{{ url_for('budgets.create', year=2024) }}" class="btn btn-success">
+        <i data-feather="plus"></i><span class="ms-2">New Budget</span>
+      </a>
+    </div>
+
+  </div>
+  
 
   <div class="row">
     <div class="col-12">
       <div class="card">
-        <div class="card-header">
-          
+        <div class="card-header d-flex flex-row justify-content-between align-items-center p-5">
+          <h1 class="fs-1">{{ month_name }}'s Budget</h1>
+          <div class="d-flex flex-column align-items-center">
+            <h5 class="text-muted">Remaning</h5>
+            <h5 class="text-primary">$ {{ "{:,.2f}".format(remaining) }}</h5>
 
+          </div>
+          <div class="d-flex flex-column align-items-center">
+            <h5 class="text-muted">Total Spent</h5>
+            <h5 class="text-danger">$ {{ "{:,.2f}".format(total_spent) }}</h5>
+            
+          </div>
+          <a href="{{ url_for('budgets.setting', year=year, month=month) }}" class="btn btn-light text-center">
+            <i data-feather="tool"></i><span class="ms-2">Budget Setting</span>
+          </a>
         </div>
         <div class="card-body px-0">
           {% for category, detail in budgets.items()  %}
+          {% set percent = (((detail.spent / detail.limit)*100) | round(2)) %}
           <div class="row px-4">
             <div class="col-4">
               <h5 class="text-muted">{{ category }}</h6>
             </div>
             <div class="col-8">
-              <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 69%"><span class="text-end me-3">75%</span></div>
+              <div class="progress" style="height: 105%" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{ percent }}%"><span class="text-end me-3">{{ percent }}%</span></div>
               </div>
             </div>
           </div>

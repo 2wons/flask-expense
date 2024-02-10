@@ -70,6 +70,13 @@
                 class="sidebar-badge badge bg-primary">Pro</span></a></li>
         </ul>
       </li>
+
+      <li class="sidebar-item {% if 'budget' in segment %} active {% endif %}">
+        <a class="sidebar-link" href="{{ url_for('budgets.home') }}">
+          <i class="align-middle" data-feather="pie-chart"></i> <span class="align-middle">Budgets</span>
+        </a>
+      </li>
+
       <!-- Sidebar , from v2.1.0 -->
 
       <li class="sidebar-header">

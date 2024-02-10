@@ -1,8 +1,5 @@
 
 <div class="mb-3">
-    <!-- <label for="exampleFormControlInput1" class="form-label">Name</label>
-    <input type="text" class="form-control" placeholder="Cat food"> -->
-
     {{ form.name.label(class="form-label") }}
     {{ form.name(class="form-control" + (' is-invalid' if form.name.errors else ''), placeholder="Cat Food") }}
     <div class="invalid-feedback">

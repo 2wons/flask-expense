@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 
-from flask import render_template, flash, redirect, url_for, request
+from flask import current_app, render_template, flash, redirect, url_for, request
 from app.main import blueprint
-from app.main.util import get_accounts, get_categories
+from app.main.util import calculate_percent_increase
 from app.main.forms import AccountForm, RecordForm
 
 import sqlalchemy as sa
@@ -10,11 +10,161 @@ from app import db
 from app.models import Account, Record
 
 from flask_login import current_user, login_required
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+import json
+
+
+
+def calc_sum(month, year, record_type):
+    return db.session.query(
+        sa.func.sum(Record.amount)
+    ).join(
+        Account, Record.account_id == Account.id
+    ).filter(
+        Account.user_id == current_user.id, 
+        Record.type == record_type, 
+        sa.extract('month', Record.date) == month, 
+        sa.extract('year', Record.date) == year
+    ).scalar()
 
 @blueprint.route('/home')
 @login_required
 def home():
-    return render_template('dashboard.html')
+
+    # retrieve top 3 categories of expense from current user
+    top_3 = db.session.query(
+        Record.category, sa.func.sum(Record.amount).label('total')
+    ).join(
+        Account, Record.account_id == Account.id
+    ).filter(
+        Account.user_id == current_user.id
+    ).group_by(
+        Record.category
+    ).order_by(
+        sa.desc('total')
+    ).limit(3).all()
+
+    # retrieve total expenses of user
+    total_expenses = db.session.query(
+        sa.func.sum(Record.amount)
+    ).join(
+        Account, Record.account_id == Account.id
+    ).filter(
+        Account.user_id == current_user.id,
+        Record.type == 'expense'
+    ).scalar()
+
+    # retrieve total incomes of user
+    total_incomes = db.session.query(
+        sa.func.sum(Record.amount)
+    ).join(
+        Account, Record.account_id == Account.id
+    ).filter(
+        Account.user_id == current_user.id,
+        Record.type == 'income'
+    ).scalar()
+
+    # retrieve total net worth of current user
+    total_net_worth = db.session.query(
+        sa.func.sum(Record.amount)
+    ).join(
+        Account, Record.account_id == Account.id
+    ).filter(
+        Account.user_id == current_user.id
+    ).scalar()
+
+    # retrieve the last 8 records of the user
+    last_8_records = db.session.query(
+        Record
+    ).join(
+        Account, Record.account_id == Account.id
+    ).filter(
+        Account.user_id == current_user.id
+    ).order_by(
+        Record.date.desc()
+    ).limit(8).all()
+
+    # retrieve the total expense of each month from the last 6 months
+    monthly_expenses = db.session.query(
+        sa.func.extract('month', Record.date).label('month'),
+        sa.func.extract('year', Record.date).label('year'),
+        sa.func.sum(Record.amount).label('total')
+    ).join(
+        Account, Record.account_id == Account.id
+    ).filter(
+        Account.user_id == current_user.id,
+        Record.type == 'expense'
+    ).group_by(
+        sa.func.extract('month', Record.date),
+        sa.func.extract('year', Record.date)
+    ).order_by(
+        sa.desc('year'),
+        sa.desc('month')
+    ).limit(6).all()
+
+    total_expenses = total_expenses*-1
+
+    # Get the current and previous month and year
+    now = datetime.now()
+    cur_month, cur_year = now.month, now.year
+    prev_month, prev_year = (cur_month - 1, cur_year) if cur_month != 1 else (12, cur_year - 1)
+
+    # Calculate the sums for the current and previous month
+    cur_incomes = calc_sum(cur_month, cur_year, 'income')
+    cur_expenses = calc_sum(cur_month, cur_year, 'expense')
+    prev_incomes = calc_sum(prev_month, prev_year, 'income')
+    prev_expenses = calc_sum(prev_month, prev_year, 'expense')
+
+    if cur_incomes is None:
+        cur_incomes = 0
+    
+    if cur_expenses is None:
+        cur_expenses = 0
+
+    if prev_incomes is None:
+        prev_incomes = 0
+    
+    if prev_expenses is None:
+        prev_expenses = 0
+
+    # Calculate the percentage increase
+    income_increase =  round(calculate_percent_increase(cur_incomes, prev_incomes), 2) \
+        if prev_incomes else None
+    expense_increase = round(calculate_percent_increase(cur_expenses, prev_expenses) *-1, 2) \
+        if prev_expenses else None
+    total_increase = round(calculate_percent_increase(cur_incomes - cur_expenses, prev_incomes - prev_expenses), 2) \
+        if prev_incomes or prev_expenses else None
+    
+    # Create a list of the last 6 months
+    last_6_months_years = [((now.month - i) % 12 or 12, now.year - (i >= now.month)) for i in range(6)]
+
+    # Update monthly_expenses to ensure it always contains data for the last 6 months
+    monthly_expenses = [
+        next(({'month': m.month, 'year': m.year, 'total': m.total} for m in monthly_expenses if m.month == month and m.year == year), {'month': month, 'year': year, 'total': 0})
+        for month, year in last_6_months_years
+    ]
+
+     # Convert the data to a dictionary
+    data = {category: round(float(value),2 ) for category, value in top_3}
+
+    # Convert the dictionary to JSON
+    top3_json = json.dumps(data)
+    current_app.logger.info('Top 3: %s', top3_json)
+    
+
+    return render_template(
+        'dashboard.html',
+        top_3=top_3,
+        top3_json=top3_json,
+        total_expenses=total_expenses,
+        total_incomes=total_incomes,
+        total_net_worth=total_net_worth,
+        last_8_records=last_8_records,
+        monthly_expenses=monthly_expenses,
+        income_increase=income_increase,
+        expense_increase=expense_increase,
+        total_increase=total_increase)
 
 @blueprint.route('/add-account', methods=['GET', 'POST'])
 @login_required

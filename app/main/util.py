@@ -34,3 +34,6 @@ def get_accounts():
 
     accounts = [(account.id, account.name) for account in current_user.accounts]
     return accounts
+
+def calculate_percent_increase(current, previous):
+    return ((current - previous) / previous) * 100 if previous else None

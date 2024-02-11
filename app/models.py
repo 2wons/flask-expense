@@ -85,8 +85,8 @@ class Record(db.Model):
                         .filter(Record.type=='income')
 
 
-    def __repr__(self) -> str:
-        return '<Account {},{}>'.format(self.id, self.category)
+    """ def __repr__(self) -> str:
+        return '<Record, id: {},{}>'.format(self.id, self.category) """
 
 
 class Budget(db.Model):

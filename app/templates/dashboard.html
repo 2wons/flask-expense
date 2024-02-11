@@ -11,19 +11,19 @@
     <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
     <div class="row mb-3">
         <div class="col-sm-4 mt-2 mt-md-0">
-            <a href="#" class="btn shadow-sm border-danger border-2 bg-white rounded-4 w-100 d-flex justify-content-center flex-column p-4">
+            <a href="{{ url_for('expenses.home') }}" class="btn shadow-sm border-danger border-2 bg-white rounded-4 w-100 d-flex justify-content-center flex-column p-4">
                 <span class="text-center text-success"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign w-25 h-25"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></i></span>
                 <h4 class="mt-3 text-success fw-bold">Add Expense</h3>
             </a>
         </div>
         <div class="col-sm-4 mt-2 mt-md-0">
-            <a href="#" class="btn border-success border-2 bg-white rounded-4 w-100 d-flex justify-content-center flex-column p-4">
+            <a href="{{ url_for('incomes.home') }}" class="btn border-success border-2 bg-white rounded-4 w-100 d-flex justify-content-center flex-column p-4">
                 <span class="text-center text-success"><i data-feather="database" stroke-width="0.5" class="w-25 h-25"></i></span>
                 <h4 class="mt-3 text-success fw-bold">Add Income</h3>
             </a>
         </div>
         <div class="col-sm-4 mt-2 mt-md-0">
-            <a href="#" class="btn border-warning border-2 bg-white rounded-4 w-100 d-flex justify-content-center flex-column p-4">
+            <a href="{{ url_for('budgets.home') }}" class="btn border-warning border-2 bg-white rounded-4 w-100 d-flex justify-content-center flex-column p-4">
                 <span class="text-center text-success"><i data-feather="pie-chart" class="w-25 h-25"></i></span>
                 <h4  class="mt-3 text-success fw-bold">Add Budget</h3>
             </a>

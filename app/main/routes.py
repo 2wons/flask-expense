@@ -101,7 +101,8 @@ def home():
         sa.desc('month')
     ).limit(6).all()
 
-    total_expenses = total_expenses*-1
+    if total_expenses is not None:
+        total_expenses = total_expenses*-1
 
     # Get the current and previous month and year
     now = datetime.now()

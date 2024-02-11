@@ -1,7 +1,7 @@
 # flask-expense
 
 ## Preview
-![image](https://github.com/2wons/flask-expense/assets/91067593/ae91c90a-e9c8-4682-a502-d5a7885d57d5)
+![image](https://github.com/2wons/flask-expense/assets/91067593/832423e1-0372-43ed-aee9-4997792e3048)
 
 ![image](https://github.com/2wons/flask-expense/assets/91067593/ecfb7416-7e79-4b77-9ff3-86fb9301a116)
 

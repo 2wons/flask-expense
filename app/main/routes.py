@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 
-from flask import current_app, render_template, flash, redirect, url_for, request
+from flask import current_app, render_template, flash, redirect, url_for
 from app.main import blueprint
 from app.main.util import calculate_percent_increase
-from app.main.forms import AccountForm, RecordForm
+from app.main.forms import AccountForm
 
 import sqlalchemy as sa
 from app import db
@@ -11,9 +11,7 @@ from app.models import Account, Record
 
 from flask_login import current_user, login_required
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 import json
-
 
 
 def calc_sum(month, year, record_type):

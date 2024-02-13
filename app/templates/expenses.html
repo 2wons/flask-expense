@@ -29,12 +29,12 @@
           {% endif %}
          
           
-          <!-- Modal Button-->
+          <!-- Add new Modal Button-->
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Add {{ legend }}
           </button>
 
-          <!-- Modal Todo: separate -->
+          <!-- Add modal -->
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -100,7 +100,7 @@
               {% for expense in results.items %}
               <tr>
                 <td> {{ expense.name }} </td>
-                <td class="text-danger"> $ {{ expense.amount }} </td>
+                <td class="{{ 'text-danger' if expense.amount <=0 else 'text-success' }}"> $ {{ expense.amount }} </td>
                 <td> {{ expense.date }} </td>
                 <td> {{ expense.category }} </td>
                 <td> {{ expense.account.name }} </td>

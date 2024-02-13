@@ -1,4 +1,4 @@
-{% macro stat_card(title, icon, data, subtitle ) %}
+{% macro stat_card(title, icon, data, subtitle, type ) %}
 <div class="col-12 col-md-6 col-xxl d-flex">
   <div class="card flex-fill">
     <div class="card-body">
@@ -13,11 +13,7 @@
           </div>
         </div>
       </div>
-      <h4 class="mt-0 mb-1">{{ data }} <span class="text-muted">2.30 BTC</span></h4>
-
-      <div class="mb-0">
-        {{ subtitle | safe }}
-      </div>
+      <h4 class="mt-0 mb-1">{{ '$' if type == 'money' else '' }} {{ data }} <span class="text-muted">Total</span></h4>
 
     </div>
   </div>
@@ -39,7 +35,7 @@
           </div>
         </div>
       </div>
-      <h1 class="mt-1 mb-3">{{ data }}</h1>
+      <h1 class="mt-1 mb-3">${{ data }}</h1>
       <div class="mb-0">
         {% if subdata is none  %}
           <span class="badge text-white text-bg-warning"> <i class="mdi mdi-arrow-bottom-right"></i> {{ subdata }} </span>

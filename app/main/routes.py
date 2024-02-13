@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
 
-from flask import current_app, render_template, flash, redirect, url_for
+from webbrowser import get
+from flask import current_app, render_template, flash, redirect, url_for, abort
 from app.main import blueprint
-from app.main.util import calculate_percent_increase
-from app.main.forms import AccountForm
+from app.main.util import calculate_percent_increase, get_categories, get_accounts
+from app.main.forms import AccountForm, RecordForm
 
 import sqlalchemy as sa
 from app import db
@@ -92,7 +93,6 @@ def home():
         Account, Record.account_id == Account.id
     ).filter(
         Account.user_id == current_user.id,
-        Record.type == 'expense'
     ).group_by(
         sa.func.extract('month', Record.date),
         sa.func.extract('year', Record.date)
@@ -136,6 +136,8 @@ def home():
         if prev_incomes or prev_expenses else None
     
     # Create a list of the last 6 months
+    # previous year is included in case prev year overlaps
+    # - with the last 6 months
     last_6_months_years = [((now.month - i) % 12 or 12, now.year - (i >= now.month)) for i in range(6)]
 
     # Update monthly_expenses to ensure it always contains data for the last 6 months
@@ -144,13 +146,11 @@ def home():
         for month, year in last_6_months_years
     ]
 
-     # Convert the data to a dictionary
+    # Convert the data to a dictionary
     data = {category: round(float(value),2 ) for category, value in top_3}
 
     # Convert the dictionary to JSON
     top3_json = json.dumps(data)
-    current_app.logger.info('Top 3: %s', top3_json)
-    
 
     return render_template(
         'dashboard.html',
@@ -185,17 +185,91 @@ def create_account():
     
     return render_template('index.html', form=form)
 
-@blueprint.route('/accounts/cash')
+@blueprint.route('/profile', methods=['GET', 'POST'])
 @login_required
-def accounts_cash():
-    return render_template('accounts.html')
+def profile():
 
-@blueprint.route('/accounts/banks')
-@login_required
-def accounts_banks():
-    return render_template('accounts.html')
+    return render_template('profile.html', me=current_user)
 
-@blueprint.route('/accounts/credit')
+@blueprint.route('/view-accounts')
 @login_required
-def accounts_credit():
-    return render_template('accounts.html')
+def accounts_home():
+    accounts = current_user.accounts
+    return render_template('accounts.html', accounts=accounts)
+
+@blueprint.route('/accounts/<int:account_id>', methods=['GET', 'POST'])
+@login_required
+def accounts_view(account_id):
+    
+    account = db.session.query(
+        Account
+    ).filter(
+        Account.user_id == current_user.id,
+        Account.id == account_id
+    ).first()
+    if account is None:
+        abort(404)
+
+    form = RecordForm()
+    form.account.data = account_id
+    form.category.choices = get_categories('income')
+    form.account.choices = get_accounts()
+
+    if form.type.data and form.type.data == 'expense':
+        form.category.choices = get_categories('expense')
+
+    if form.validate_on_submit():
+        type = form.type.data
+        record = Record(
+            name=form.name.data,
+            amount=form.amount.data,
+            date=form.date_spent.data,
+            account_id=form.account.data,
+            category=form.category.data,
+            note=form.note.data,
+            type=type
+        )
+        db.session.add(record)
+        db.session.commit()
+
+        flash(f'{type} successfully added.', 'success')
+        return redirect(url_for('main.accounts_view', account_id=account_id))
+
+    account = db.session.query(
+        Account
+    ).filter(
+        Account.user_id == current_user.id,
+        Account.id == account_id
+    ).first()
+    if account is None:
+        abort(404)
+
+    transactions = db.session.query(
+        Record
+    ).filter(
+        Record.account_id == account_id
+    ).order_by(
+        Record.date.desc()
+    ).all()
+
+    # get the total sum of the transactions
+    balance = 0
+    earnings = 0
+    spent = 0
+    for record in transactions:
+        balance += record.amount
+        if record.type == 'income':
+            earnings += record.amount
+        else:
+            spent += record.amount
+    
+    name = account.name
+    
+    return render_template(
+        'accounts_view.html',
+        name=name,
+        form=form,
+        transactions=transactions,
+        balance=balance,
+        earnings=earnings,
+        spent=spent)

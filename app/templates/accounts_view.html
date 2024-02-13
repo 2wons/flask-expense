@@ -1,0 +1,286 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Accounts {% endblock title %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+  <div class="d-flex flex-row justify-content-start align-items-end mb-3">
+    <i data-feather="credit-card" class="text-primary me-2" style="height: 3%; width:3%;"></i>
+
+    <h2 class="mb-0" style="font-size: xx-large;">My {{ name }}</h2>
+  </div>
+
+
+  <div class="row">
+    <div class="col-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Total Balance</h5>
+
+        </div>
+        <div class="card-body px-0 py-0">
+          <div class="container">
+            <h2 class="px-3">$ {{ balance }}</h2>
+          </div>
+          <hr class="border border-primary border-3 opacity-75">
+
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Earnings</h5>
+
+        </div>
+        <div class="card-body p-0">
+          <div class="container">
+            <h2 class="px-3">$ {{ earnings }}</h2>
+          </div>
+          <hr class="border border-success border-3 opacity-75">
+
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Spent</h5>
+
+        </div>
+        <div class="card-body p-0">
+          <div class="container">
+            <h2 class="px-3">$ {{ spent }}</h2>
+          </div>
+          <hr class="border border-danger border-3 opacity-75">
+        </div>
+      </div>
+
+    </div>
+    <div class="col-8">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex">
+            <h5 class="fs-3 mb-0 flex-grow-1">Transactions</h5>
+            <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-recordtype="income">
+              <i data-feather="plus"></i><span class="ms-2">Income</span>
+            </button>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-recordtype="expense">
+              <i data-feather="minus"></i><span class="ms-2">Expense</span>
+            </button>
+          </div>
+
+          <!-- Add Transaction Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-3" id="exampleModalLabel">Add {{ legend }}</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" method="post" novalidate>
+                  {{ form.csrf_token() }}
+                  <div class="modal-body">
+                    
+                    <div class="mb-3">
+                      {{ form.name.label(class="form-label") }}
+                      {{ form.name(class="form-control" + (' is-invalid' if form.name.errors else ''), placeholder="Cat Food") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.name.errors %}
+                              <span> {{ error }} </span>
+                          {% endfor %}
+                      </div>
+                    </div>
+                    {{ form.amount.label(class="form-label") }}
+                    <div class="input-group mb-3">
+                      <span class="input-group-text">$</span>
+                      {{ form.amount(class="form-control" + (' is-invalid' if form.amount.errors else ''), placeholder="199") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.name.errors %}
+                              {{ error }} 
+                          {% endfor %}
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      {{ form.date_spent.label(class="form-label") }}
+                      {{ form.date_spent(class="form-control" + (' is-invalid' if form.date_spent.errors else '') ) }}
+                      <div class="invalid-feedback">
+                          {% for error in form.date_spent.errors %}
+                              <span> {{ error }} </span>
+                          {% endfor %}
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      {{ form.category.label(class="form-label") }}
+                      {{ form.category(id='mySelect', class="form-select" + (' is-invalid' if form.category.errors else '') ) }}
+                      <div class="invalid-feedback">
+                          {% for error in form.category.errors %}
+                              <span> {{ error }} </span>
+                          {% endfor %}
+                      </div>
+                    </div>
+                    <div class="input-group">
+                      <span class="input-group-text">Notes</span>
+                      {{ form.note(class="form-control" + (' is-invalid' if form.note.errors else ''), placeholder="Additional notes") }}
+                      {{ form.type(id="type_input") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.note.errors %}
+                              <span> {{ error }} </span>
+                          {% endfor %}
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {{ form.submit(class="btn btn-primary") }}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!--Confirm Delete Modal -->
+          <div class="modal fade" id="confirm-delete" tabindex="-1" aria-labelledby="confirm-delete-label" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Delete</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to Delete?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <form id="deleteForm" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="card-body p-0">
+
+          <table class="table table-hover table-striped">
+            <thead class="table-light">
+              <tr>
+                <th scope="row">Name</th>
+                <th scope="row">Amount</th>
+                <th scope="row">Date</th>
+                <th scope="row">Category</th>
+                <th scope="row">Type</th>
+                <th scope="row">Note</th>
+                <th scope="row">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for record in transactions  %}
+                <tr>
+                  <td class="text-secondary">{{ record.name }}</td>
+                  <td class="d-none d-xl-table-cell">$ {{ record.amount }}</td>
+                  <td class="d-none d-xl-table-cell">{{ record.date }}</td>
+                  <td class="d-none d-md-table-cell">{{ record.category }}</td>
+                  <td><span class="badge {{ 'bg-success' if record.type == 'income' else 'bg-danger' }}">{{ record.type }}</span></td>
+                  <td class="d-none d-md-table-cell">{{ record.note }}</td>
+                  <td class="table-action"> 
+                    {% if record.type == 'expense' %}
+                      <a href="{{ url_for('expenses.expense', record_id=record.id) }}">
+                      
+                    {% else %}
+                      <a href="{{ url_for('incomes.income', record_id=record.id) }}">
+                      
+                    {% endif %}
+                      <i data-feather="edit-2" class="feather"></i>
+                    </a>
+                    <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#confirm-delete" data-bs-record-id="{{ record.id }}" data-bs-type="{{ record.type }}">
+                      <i data-feather="trash" class="feather"></i>
+                    </button>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% if form.errors %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script>
+  $(window).on('load', function () {
+    $('#exampleModal').modal('show');
+  });
+</script>
+{% endif %}
+<script>
+  const exampleModal = document.getElementById('exampleModal')
+  if (exampleModal) {
+    exampleModal.addEventListener('show.bs.modal', event => {
+      // Button that triggered the modal
+      const button = event.relatedTarget
+      // Extract info from data-bs-* attributes
+      const recipient = button.getAttribute('data-bs-recordtype')
+
+      const modalTitle = exampleModal.querySelector('.modal-title')
+      const modalBodyInput = exampleModal.querySelector('.modal-body input')
+
+      modalTitle.textContent = 'Add ' + recipient
+
+      document.getElementById('type_input').value = recipient;
+
+      var incomeOptions = ['Allowance','Salary','Passive','Bonus', 'Gift', 'Investment','Tips', 'Other'];
+      var expenseOptions = ['Food','Groceries','Medical', 'Bills', 'Entertainment', 'Shopping', 'Travel', 'Debt', 'Other']
+
+      var selectElement = document.getElementById('mySelect');
+
+      var options = [];
+      if (recipient == 'income') {
+        options = incomeOptions;
+      } else {
+        options = expenseOptions;
+      }
+
+      while (selectElement.options.length > 0) {                
+        selectElement.remove(0);
+      }
+
+      options.forEach(function(option) {
+          var optionElement = document.createElement("option");
+          optionElement.text = option;
+          optionElement.value = option;
+          selectElement.add(optionElement);
+      });
+
+    })
+  }
+</script>
+<script>
+  const confirmDeleteModal = document.getElementById('confirm-delete')
+  if (confirmDeleteModal) {
+    confirmDeleteModal.addEventListener('show.bs.modal', event => {
+      // Button that triggered the modal
+      const button = event.relatedTarget
+      // Extract info from data-bs-* attributes
+      const recipient = button.getAttribute('data-bs-record-id')
+      const type = button.getAttribute('data-bs-type')
+      if (type == 'expense') {
+        document.getElementById('deleteForm').action = "/expenses/" + recipient;
+      } else {
+        document.getElementById('deleteForm').action = "/incomes/" + recipient;
+      }
+      console.log(recipient)
+      
+    })
+  }
+</script>
+{% endblock javascripts %}

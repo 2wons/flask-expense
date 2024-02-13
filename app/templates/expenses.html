@@ -9,9 +9,9 @@
   <h1 class="h3 mb-3">{{ legend }}</h1>
   <div class="row">
     {{ card.stat_card('Total Count', 'dollar-sign', count, 
-          '<span class="text-success"> +6.15%  </span> <span class="text-success"> +6.15%  </span>') }}
+          '<span class="text-success"> +6.15%  </span> <span class="text-success"> +6.15%  </span>', '') }}
     {{ card.stat_card('Total Amount', 'dollar-sign', sum, 
-          '<span class="text-success"> +6.15%  </span> <span class="text-muted">Since last week</span>') }}
+          '<span class="text-success"> +6.15%  </span> <span class="text-muted">Since last week</span>', 'money') }}
   
     <!-- ewnd -->
   </div>

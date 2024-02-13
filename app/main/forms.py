@@ -1,8 +1,7 @@
+from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, DecimalField, DateField, TextAreaField
-from wtforms.validators import DataRequired, Length
-from decimal import Decimal
-from datetime import datetime ,date
+from wtforms import StringField, SubmitField, SelectField, DecimalField, DateField, TextAreaField, PasswordField, HiddenField
+from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, Optional
 
 class RecordForm(FlaskForm, object):
 
@@ -18,6 +17,8 @@ class RecordForm(FlaskForm, object):
                            validators=[DataRequired()])
     note = TextAreaField('Note',
                          validators=[Length(max=60)])
+    type = HiddenField('Type',
+                       validators=[Optional()])
     submit = SubmitField('Add')
 
     def fill_from_record(self, record):
@@ -40,4 +41,16 @@ class AccountForm(FlaskForm):
     # description
 
     submit = SubmitField('Add Account')
+
+class ResetForm(FlaskForm):
+
+    old_password = PasswordField('Old Password',
+                                 validators=[DataRequired()])
+    new_password = PasswordField('New Password',
+                                 validators=[DataRequired()])
+    confirm_new = PasswordField('Confirm new Password',
+                             validators=[DataRequired(), EqualTo('new_password')])
     
+    def validate_old_password(self, old_password):
+        if not current_user.check_password(old_password.data):
+            raise ValidationError('Invalid old password')

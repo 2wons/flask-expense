@@ -115,9 +115,9 @@
                     <tbody>
                         {% for record in last_8_records  %}
                             <tr>
-                                <td class="fw-bold">{{ record.name }}</td>
+                                <td class="text-secondary">{{ record.name }}</td>
                                 <td class="d-none d-xl-table-cell">{{ record.date }}</td>
-                                <td class="d-none d-xl-table-cell">{{ record.amount }}</td>
+                                <td class="d-none d-xl-table-cell">${{ record.amount }}</td>
                                 <td><span class="badge {{ 'bg-success' if record.type == 'income' else 'bg-danger' }}">{{ record.type }}</span></td>
                                 <td class="d-none d-md-table-cell">{{ record.category }}</td>
                             </tr>
@@ -158,13 +158,13 @@
         new Chart(document.getElementById("chartjs-dashboard-line"), {
             type: "line",
             data: {
-                labels: months,
+                labels: months.reverse(),
                 datasets: [{
                     label: "Totals ($)",
                     fill: true,
                     backgroundColor: gradient,
                     borderColor: window.theme.primary,
-                    data: totals,
+                    data: totals.reverse(),
                 }]
             },
             options: {
@@ -192,7 +192,7 @@
                     }],
                     yAxes: [{
                         ticks: {
-                            stepSize: 1000
+                            stepSize: 2000
                         },
                         display: true,
                         borderDash: [3, 3],

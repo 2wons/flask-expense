@@ -16,7 +16,7 @@
       </li>
 
       <li class="sidebar-item {% if 'profile' in segment %} active {% endif %}">
-        <a class="sidebar-link" href="pages-profile.html">
+        <a class="sidebar-link" href="{{ url_for('main.profile') }}">
           <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
         </a>
       </li>
@@ -59,12 +59,6 @@
 
       <li class="sidebar-header">
         Other
-      </li>
-
-      <li class="sidebar-item {% if 'settings' in segment %} active {% endif %}">
-        <a class="sidebar-link" href="#">
-          <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Settings</span>
-        </a>
       </li>
 
       <li class="sidebar-item {% if 'signout' in segment %} active {% endif %}">

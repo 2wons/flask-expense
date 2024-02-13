@@ -4,7 +4,7 @@ from webbrowser import get
 from flask import current_app, render_template, flash, redirect, url_for, abort
 from app.main import blueprint
 from app.main.util import calculate_percent_increase, get_categories, get_accounts
-from app.main.forms import AccountForm, RecordForm
+from app.main.forms import AccountForm, RecordForm, ResetForm
 
 import sqlalchemy as sa
 from app import db
@@ -188,8 +188,16 @@ def create_account():
 @blueprint.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    form = ResetForm()
 
-    return render_template('profile.html', me=current_user)
+    if form.validate_on_submit():
+        current_user.set_password(form.new_password.data)
+        db.session.commit()
+
+        flash('Password successfully reset.', 'success')
+        return redirect(url_for('main.profile'))
+
+    return render_template('profile.html', me=current_user, form=form)
 
 @blueprint.route('/view-accounts')
 @login_required

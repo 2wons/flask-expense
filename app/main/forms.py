@@ -36,9 +36,6 @@ class AccountForm(FlaskForm):
     group = SelectField('Group',
                         validators=[DataRequired()],
                         choices=[("Cash", "Cash"), ("Bank", "Bank"), ("Card", "Card")])
-    
-    # initial balance
-    # description
 
     submit = SubmitField('Add Account')
 
@@ -50,6 +47,8 @@ class ResetForm(FlaskForm):
                                  validators=[DataRequired()])
     confirm_new = PasswordField('Confirm new Password',
                              validators=[DataRequired(), EqualTo('new_password')])
+    
+    submit = SubmitField('Reset Password')
     
     def validate_old_password(self, old_password):
         if not current_user.check_password(old_password.data):

@@ -1,4 +1,5 @@
 # flask-expense
+( python - flask - bootstrap - adminkit - postgresql )
 
 ## Preview
 ![image](https://github.com/2wons/flask-expense/assets/91067593/832423e1-0372-43ed-aee9-4997792e3048)

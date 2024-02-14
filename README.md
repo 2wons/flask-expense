@@ -15,3 +15,22 @@
 * **Monthly Budgets:** Monthly categorized budgets.
 * **Dashboard & statistics:** Relevant reports on transactions.
 * **Multiple Accounts:**  Categorize incomes/expenses with multiple accounts.
+
+## How to run (windows)
+create venv
+```
+python -m venv .venv
+```
+activate venv
+```
+.\.venv\Scripts\Activate.ps1
+```
+install requirements
+```
+pip install -r requirements.txt
+```
+
+run
+```
+flask run
+```

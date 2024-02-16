@@ -29,7 +29,14 @@ install requirements
 ```
 pip install -r requirements.txt
 ```
+
 fill out .env (rename .envsample to .env)
+- set up db credentials and your_secret_key
+
+apply migrations
+```
+flask db upgrade
+```
 
 run
 ```

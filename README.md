@@ -29,7 +29,7 @@ install requirements
 ```
 pip install -r requirements.txt
 ```
-fill out .env (rename .envsanple to .env)
+fill out .env (rename .envsample to .env)
 
 run
 ```

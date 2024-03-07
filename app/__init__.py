@@ -33,10 +33,11 @@ def create_app(config_class = Config):
     from app.budgets import blueprint as budgets_bp
     app.register_blueprint(budgets_bp)
 
+    from app.subscriptions import blueprint as subs_bp
+    app.register_blueprint(subs_bp)
+
     from app.main import blueprint as main_bp
     app.register_blueprint(main_bp)
-
-    
 
 
     return app

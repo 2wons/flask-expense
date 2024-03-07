@@ -55,6 +55,12 @@
         </a>
       </li>
 
+      <li class="sidebar-item {% if 'subscriptions' in segment %} active {% endif %}">
+        <a class="sidebar-link" href="{{ url_for('subs.home') }}">
+          <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Subscriptions</span>
+        </a>
+      </li>
+
       <!-- Sidebar , from v2.1.0 -->
 
       <li class="sidebar-header">

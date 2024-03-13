@@ -1,0 +1,55 @@
+<ul class="nav nav-underline p-2">
+    <li class="nav-item">
+        <a class="nav-link {% if 'all' in current %} active {% endif %}" hx-get="{{ url_for('subs.all') }}" role="tab" href="#" aria-controls="tab-content">
+            <i data-feather="inbox"></i>
+            All
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if 'active' in current %} active {% endif %}" hx-get="{{ url_for('subs.active') }}" role="tab" href="#" aria-controls="tab-content">
+            <i data-feather="check-circle"></i>
+            Active
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if 'cancelled' in current %} active {% endif %}" hx-get="{{ url_for('subs.cancelled') }}" role="tab" href="#" aria-controls="tab-content">
+            <i data-feather="x-circle"></i>
+            Cancelled
+        </a>
+    </li>
+</ul>
+
+<div id="tab-content" role="tabpanel" class="tab-content rounded-3 bg-white">
+	
+    <table class="table table-bordered border-light table-hover">
+        <thead>
+            <tr>
+                <th scope="col"><i data-feather="info"></i>  Provider</th>
+                <th scope="col">Status</th>
+                <th scope="col">Price</th>
+                <th scope="col">Billing</th>
+                <th scope="col">Category</th>
+                <th scope="col">Payment Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+            </tr>
+            <tr>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script>feather.replace();</script>

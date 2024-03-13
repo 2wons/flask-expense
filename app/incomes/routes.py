@@ -11,7 +11,7 @@ from app.models import Account, Record
 
 from flask_login import current_user, login_required
 
-
+# TODO: remove
 @blueprint.route('/', methods=['GET', 'POST'])
 @login_required
 def home():

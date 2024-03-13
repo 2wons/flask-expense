@@ -53,6 +53,10 @@ class Account(db.Model):
         back_populates='account', cascade='all, delete-orphan'
     )
 
+    subscriptions: so.Mapped[List['Subscription']] = so.relationship(
+        back_populates='account', cascade='all, delete-orphan'
+    )
+
     def __repr__(self) -> str:
         return '<Account {},{}>'.format(self.id, self.name)
 
@@ -114,3 +118,20 @@ class Budget(db.Model):
     @classmethod
     def find_from_user_and_month(cls, user_id, year, month):
         return cls.query.filter_by(user_id=user_id, year=year, month=month).first()
+
+class Subscription(db.Model):
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    status: so.Mapped[str] = so.mapped_column(sa.String(16),
+                                                index=True)
+    price: so.Mapped[Decimal] = so.mapped_column(sa.Numeric(12,2))
+    billing: so.Mapped[str] = so.mapped_column(sa.String(16),
+                                                index=True)
+    start_date: so.Mapped[date] = so.mapped_column(sa.Date)
+    category: so.Mapped[str] = so.mapped_column(sa.String(32),
+                                                index=True)
+
+    # payment method
+    account_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Account.id),
+                                                  index=True)
+    account: so.Mapped[Account] = so.relationship(back_populates='subscriptions')

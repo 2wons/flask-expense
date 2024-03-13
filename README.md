@@ -8,8 +8,17 @@
 
 ![image](https://github.com/2wons/flask-expense/assets/91067593/8f62861c-60a4-4d38-978b-5482d2c4e101)
 
-## Sprint 2 new
-- added subscriptions page draft layout
+![image](https://github.com/2wons/flask-expense/assets/91067593/411d5334-2d9e-4cea-811d-e05ccac7a5f1)
+
+
+## Sprint 3 new
+- revise subscriptions with new layout
+- setup subscriptions table & model
+
+## Todo
+- handle subscriptions forms/creation
+- polish
+  
 ## Features
 
 * **Income and Expense Tracking:** Manage transactions (View, update ,add, delete).

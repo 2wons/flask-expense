@@ -1,14 +1,32 @@
 <div class="modal-dialog modal-dialog-centered">
   <div class="modal-content">
     <div class="modal-header">
+      {% if sub_id %}
+      <h5 class="modal-title fw-bold">Edit Subscription</h5>
+      
+      {% else %}
       <h5 class="modal-title fw-bold">New Subscription</h5>
+      {% endif %}
     </div>
     <div class="modal-body">
-        {% include 'subs/add_form.html' %}
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      {{ form.submit(class="btn btn-primary") }}
+      {% if sub_id %}
+      <div id="editsub" 
+      hx-get="/subscriptions/edit/{{ sub_id }}" 
+      hx-trigger="load delay:100ms" 
+      hx-target="#contains" hx-swap="innerHTML" 
+    >
+      {% else %}
+      <div id="addsub" 
+        hx-get="/subscriptions/add" 
+        hx-trigger="load delay:100ms" 
+        hx-target="#contains" hx-swap="innerHTML" 
+      >
+        
+      {% endif %}
+        <div id="contains">
+
+        </div>
+      </div>
     </div>
   </div>
 </div>

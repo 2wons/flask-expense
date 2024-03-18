@@ -1,0 +1,84 @@
+{% if sub_id %}
+<form id="subform" hx-put="{{ url_for('subs.edit', sub_id=sub_id) }}" novalidate>
+{% else %}
+<form id="subform" hx-post="{{ url_for('subs.add') }}" novalidate>
+    
+{% endif %}
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.provider.label(class="form-label") }}
+        {{ form.provider(class="form-control" + (' is-invalid' if form.provider.errors else ''), placeholder="Netflix") }}
+        <div class="invalid-feedback">
+            {% for error in form.provider.errors %}
+                <span> {{ error }} </span>
+            {% endfor %}
+        </div>
+    </div>
+    {{ form.price.label(class="form-label") }}
+    <div class="input-group mb-3">
+    <span class="input-group-text">$</span>
+    {{ form.price(class="form-control" + (' is-invalid' if form.price.errors else ''), placeholder="199") }}
+        <div class="invalid-feedback">
+            {% for error in form.price.errors %}
+                {{ error }} 
+            {% endfor %}
+        </div>
+    </div>
+    <div class="mb-3">
+    {{ form.start_date.label(class="form-label") }}
+    {{ form.start_date(class="form-control" + (' is-invalid' if form.start_date.errors else '') ) }}
+        <div class="invalid-feedback">
+            {% for error in form.start_date.errors %}
+                <span> {{ error }} </span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="mb-3">
+    {{ form.billing.label(class="form-label") }}
+    {{ form.billing(class="form-select" + (' is-invalid' if form.billing.errors else '') ) }}
+        <div class="invalid-feedback">
+            {% for error in form.billing.errors %}
+                <span> {{ error }} </span>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- category -->
+    <div class="mb-3">
+    {{ form.category.label(class="form-label") }}
+    {{ form.category(class="form-select" + (' is-invalid' if form.category.errors else '') ) }}
+        <div class="invalid-feedback">
+            {% for error in form.category.errors %}
+                <span> {{ error }} </span>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- account -->
+    <div class="mb-3">
+    {{ form.account.label(class="form-label") }}
+    {{ form.account(class="form-select" + (' is-invalid' if form.account.errors else '') ) }}
+        <div class="invalid-feedback">
+            {% for error in form.account.errors %}
+                <span> {{ error }} </span>
+            {% endfor %}
+        </div>
+    </div>
+    {% if sub_id %}
+    <div class="mb-3 d-flex flex-row">
+        <span class="form-label fw-bold pe-4">{{ form.status.label }}</span>
+        <div>
+            {% for subfield in form.status %}
+                <div class="form-check form-check-inline">
+                    {{ subfield(class="form-check-input") }}
+                    <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <!-- Status Radio Buttons -->
+    <div class="d-flex flex-row-reverse my-3">
+        {{ form.submit(class="btn btn-primary ms-2") }}
+        <button type="button" class="btn btn-secondary ms-2" data-bs-dismiss="modal">Close</button>
+
+    </div>
+</form>

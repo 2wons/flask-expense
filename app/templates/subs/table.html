@@ -30,25 +30,57 @@
                 <th scope="col">Billing</th>
                 <th scope="col">Category</th>
                 <th scope="col">Payment Method</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
+            {% for sub in content  %}
             <tr>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
+                <td>{{ sub.provider }}</td>
+                <td>
+                    {% if sub.status == 'active' %}
+                    <span class="badge rounded-pill bg-success">Active</span>
+                    {% else %}
+                    <span class="badge rounded-pill bg-danger">Cancelled</span>
+                    {% endif %}
+                </td>
+                <td>{{ sub.price }}</td>
+                <td>
+                    {% if sub.billing == 'Monthly' %}
+                    <span class="badge rounded-pill bg-primary">Monthly</span>
+                    {% else %}
+                    <span class="badge rounded-pill bg-warning">Yearly</span>
+                    {% endif %}
+                </td>
+                <td>{{ sub.category }}</td>
+                <td><a class="link-secondary fst-italic fw-semibold link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" 
+                    href="{{ url_for('main.accounts_view', account_id=sub.account.id) }}">{{ sub.account.name }}</a></td>
+                <td>{{ sub.start_date }}</td>
+                <td class="table-action">
+                    <button hx-confirm="Are you sure?" hx-target="closest tr" hx-swap="outerHTML swap:1s" 
+                    type="button" class="btn btn-icon p-1" hx-delete="{{ url_for('subs.delete', sub_id=sub.id)  }}">
+                        <i data-feather="trash" class="feather"></i>
+                    </button>
+                    <button 
+                        hx-get="{{ url_for('subs.modal', sub_id=sub.id) }}"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                        class="btn btn-icon p-1" 
+                    >
+                        <i data-feather="edit-2" class="feather"></i>
+                    </button>
+                </td>
             </tr>
+            {% endfor %}
+            <!-- check if results are empty -->
+            {% if content|length == 0 %}
             <tr>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
+                <td colspan="7" class="text-center">No records found</td>
             </tr>
+            {% endif %}
         </tbody>
     </table>
 </div>

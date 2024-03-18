@@ -1,11 +1,15 @@
+from tkinter import ACTIVE
 from typing import Optional, List
 from decimal import Decimal
-from datetime import date
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 import sqlalchemy as sa
 import sqlalchemy.orm as so
+from sqlalchemy.sql import case
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from enum import Enum
 
 class User(db.Model, UserMixin):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -119,9 +123,19 @@ class Budget(db.Model):
     def find_from_user_and_month(cls, user_id, year, month):
         return cls.query.filter_by(user_id=user_id, year=year, month=month).first()
 
+class SubType(Enum):
+    ACTIVE = 'active'
+    CANCELLED = 'cancelled'
+
+class BillingType(Enum):
+    MONTHLY = 'Monthly'
+    YEARLY = 'Yearly'
+
 class Subscription(db.Model):
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    provider: so.Mapped[str] = so.mapped_column(sa.String(64),
+                                                index=True)
     status: so.Mapped[str] = so.mapped_column(sa.String(16),
                                                 index=True)
     price: so.Mapped[Decimal] = so.mapped_column(sa.Numeric(12,2))
@@ -135,3 +149,47 @@ class Subscription(db.Model):
     account_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Account.id),
                                                   index=True)
     account: so.Mapped[Account] = so.relationship(back_populates='subscriptions')
+
+    @classmethod
+    def get_subs_from_user(cls, user_id, status: SubType=None):
+        if not status:
+            return cls.query.join(Account) \
+                            .filter(Account.user_id == user_id)
+        else:
+            return cls.query.join(Account) \
+                            .filter(Account.user_id == user_id) \
+                            .filter(Subscription.status==status.value)
+    
+    @classmethod
+    def get_next_date(cls, start_date, cycle: BillingType):
+        current_date = datetime.now().date()
+
+        next_date = None
+        if (cycle == BillingType.MONTHLY.value):
+            cycles = (current_date.year - start_date.year) * 12 + current_date.month - start_date.month
+            next_date = start_date + relativedelta(months=cycles + 1)
+        else:
+            cycles = current_date.year - start_date.year
+            next_date = start_date + relativedelta(years=cycles + 1)
+        
+        return next_date
+    
+    @classmethod
+    def get_upcoming(cls, user_id):
+        current_date = datetime.now().date()
+        
+        upcoming = []
+
+        subs = cls.get_subs_from_user(user_id, SubType.ACTIVE)
+        for sub in subs:
+            next_date = cls.get_next_date(sub.start_date, sub.billing)
+            if next_date <= (current_date + relativedelta(days=30)):
+                upcoming.append({
+                    'subscription': sub,
+                    'next_date': next_date
+                })
+        
+        return upcoming
+
+    def __repr__(self) -> str:
+        return '<Subscription {},{}>'.format(self.id, self.provider)

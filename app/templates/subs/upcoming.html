@@ -1,13 +1,14 @@
 
 {{ content }}
 
+{% for data in content %}
 <div class="row row-striped border bg-white p-3">
     <div class="col-2 text-right">
-        <h1 class="display-4"><span class="badge text-bg-secondary">23</span></h1>
-        <h2>OCT</h2>
+        <h1 class="display-4"><span class="badge text-bg-secondary">{{ data['next_date'].day }}</span></h1>
+        <h2>{{ data['next_date'].strftime('%b') }}</h2>
     </div>
     <div class="col-10">
-        <h1 class="text-uppercase"><strong>Netflix</strong></h1>
+        <h1 class="text-uppercase"><strong>{{ data['subscription'].provider }}</strong></h1>
         <ul class="list-inline">
             <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i> Monday</li>
             <li class="list-inline-item"><i class="fa fa-clock-o" aria-hidden="true"></i> 12:30 PM - 2:00 PM</li>
@@ -15,3 +16,4 @@
         </ul>
     </div>
 </div>
+{% endfor %}

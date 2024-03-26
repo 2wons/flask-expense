@@ -16,7 +16,7 @@
 - setup subscriptions table & model
 
 ## Todo
-- handle subscriptions forms/creation
+- mark due subscriptions as completed transactions
 - polish
   
 ## Features
@@ -42,6 +42,7 @@ pip install -r requirements.txt
 
 fill out .env (rename .envsample to .env)
 - set up db credentials and your_secret_key
+- to use sqlite, leave db credentials blank
 
 apply migrations
 ```

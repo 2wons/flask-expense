@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, DecimalField, DateField, RadioField
 from wtforms.validators import DataRequired, Length, ValidationError
 
-from app.models import Subscription
+from app.models import Subscription, Record
 
 class SubscriptionForm(FlaskForm):
 
@@ -69,3 +69,15 @@ def update_subscription(subscription, form):
     subscription.status     = form.status.data
 
     return subscription
+
+def make_record_from_sub(sub, date):
+    record = Record(
+        name        = sub.provider,
+        date        = date,
+        amount      = -sub.price,
+        category    = sub.category,
+        account_id  = sub.account_id,
+        type        = 'expense',
+        note        = 'Subscription payment'
+    )
+    return record

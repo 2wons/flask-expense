@@ -31,7 +31,7 @@ def home():
     
     months = []
     # render empty budget page if user has no budgets at all
-    return render_template('budgets_empty.html', legend='empty', year=0, all_budgets=months, month=0 )
+    return render_template('budgets/budgets_empty.html', legend='empty', year=0, all_budgets=months, month=0 )
 
 
 @blueprint.route("/new", methods=['GET', 'POST'])
@@ -63,7 +63,7 @@ def create():
         flash(f'Budget for {month} {year} created', 'success')
         return redirect(url_for('budgets.view', year=year, month=month))
 
-    return render_template('budget_setting.html', form=form, legend="create")
+    return render_template('budgets/budget_setting.html', form=form, legend="create")
 
 @blueprint.route("/<int:year>/<int:month>/setting", methods=['GET', 'POST'])
 @login_required
@@ -98,7 +98,7 @@ def setting(year, month):
     form.fill_from_budget(budget)
     form.submit.label.text = "Update"
 
-    return render_template('budget_setting.html', form=form, legend="update", month=month, year=year)
+    return render_template('budgets/budget_setting.html', form=form, legend="update", month=month, year=year)
 
 @blueprint.route("/<int:year>/<int:month>", methods=['GET', 'POST'])
 @login_required
@@ -172,7 +172,7 @@ def view(year, month):
     remaining = float(budget.amount) - total_spent
     
     return render_template(
-        'budgets.html',
+        'budgets/budgets.html',
         budgets=budgets, 
         month_name=month_names, 
         month=month,

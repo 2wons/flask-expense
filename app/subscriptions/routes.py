@@ -1,11 +1,13 @@
 # -*- encoding: utf-8 -*-
 
+import datetime
+from os import link
 from flask import render_template, flash, url_for, request
 from flask_login import login_required, current_user
 from app.subscriptions import blueprint
 from app.utils import HXRedirect
 
-from app.subscriptions.forms import SubscriptionForm, create_subscription, update_subscription
+from app.subscriptions.forms import SubscriptionForm, create_subscription, update_subscription, make_record_from_sub
 from app.main.util import get_accounts, get_categories
 
 from app import db
@@ -103,3 +105,18 @@ def delete(sub_id):
     db.session.delete(sub)
     db.session.commit()
     return ""
+
+@blueprint.route('/edit/<int:sub_id>/pay', methods=['GET', 'POST'])
+def pay(sub_id):
+    sub = Subscription.query.get_or_404(sub_id)
+    if request.method == 'POST':
+        date = Subscription.get_next_date(sub.start_date, sub.billing)
+        record = make_record_from_sub(sub, date)
+        db.session.add(record)
+        db.session.commit()
+        link = url_for('expenses.expense', record_id=record.id)
+        anchor = f'<a href="{link}">view here</a>'
+        flash(f'Payment recorded successfully, {anchor}', 'success')
+        return HXRedirect(url_for('subs.home'))
+    
+    return render_template('subs/pay.html', sub=sub)

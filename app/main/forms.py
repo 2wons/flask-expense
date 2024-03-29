@@ -21,6 +21,12 @@ class RecordForm(FlaskForm, object):
                        validators=[Optional()])
     submit = SubmitField('Add')
 
+    def validate_amount(self, amount):
+        if amount.data == 0:
+            raise ValidationError('Amount must not be 0.')
+        if amount.data < 0:
+            raise ValidationError('Amount must be greater than 0.')
+
     def fill_from_record(self, record):
         self.name.data = record.name
         self.amount.data = record.amount

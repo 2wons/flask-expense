@@ -1,19 +1,30 @@
 
-{{ content }}
-
 {% for data in content %}
 <div class="row row-striped border bg-white p-3">
     <div class="col-2 text-right">
         <h1 class="display-4"><span class="badge text-bg-secondary">{{ data['next_date'].day }}</span></h1>
         <h2>{{ data['next_date'].strftime('%b') }}</h2>
     </div>
-    <div class="col-10">
+    <div class="col-8">
+        {% set sub = data['subscription']  %}
         <h1 class="text-uppercase"><strong>{{ data['subscription'].provider }}</strong></h1>
         <ul class="list-inline">
-            <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i> Monday</li>
-            <li class="list-inline-item"><i class="fa fa-clock-o" aria-hidden="true"></i> 12:30 PM - 2:00 PM</li>
-            <li class="list-inline-item"><i class="fa fa-location-arrow" aria-hidden="true"></i> Cafe</li>
+            <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i>{{ sub.category }}</li>
+            <li class="list-inline-item"><i class="fa fa-clock-o" aria-hidden="true"></i>{{ sub.billing }}</li>
+            <li class="list-inline-item"><i class="fa fa-location-arrow" aria-hidden="true"></i>• started {{ sub.start_date }}</li>
         </ul>
+    </div>
+    <div class="col-2">
+        {% set id_now = data['subscription'].id %}
+        <button 
+                hx-get="{{ url_for('subs.pay', sub_id=id_now) }}" 
+                hx-target="#modals-here" 
+                hx-trigger="click" 
+                data-bs-toggle="modal" 
+                data-bs-target="#modals-here"
+                class="btn btn-primary">
+                <i data-feather="plus-circle"></i>  Make Payment
+            </button>
     </div>
 </div>
 {% endfor %}

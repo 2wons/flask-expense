@@ -1,0 +1,13 @@
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        Make Payment
+      </div>
+      <div class="modal-body">
+        <form hx-post="{{ url_for('subs.pay', sub_id=sub.id) }}" novalidate>
+            <h3>Make Payment for {{ sub.provider }}?</h3>
+            <button type="submit" class="btn btn-primary">Pay Now</button>
+        </form>
+      </div>
+    </div>
+  </div>

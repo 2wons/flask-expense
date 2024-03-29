@@ -166,8 +166,8 @@
         </div>
         <div class="card-body p-0">
 
-          <table class="table table-hover table-striped">
-            <thead class="table-light">
+          <table class="table table-bordered border-light table-hover table-striped">
+            <thead>
               <tr>
                 <th scope="row">Name</th>
                 <th scope="row">Amount</th>
@@ -203,6 +203,11 @@
                   </td>
                 </tr>
               {% endfor %}
+              {% if transactions|length == 0 %}
+              <tr>
+                  <td colspan="8" class="text-center">No records found</td>
+              </tr>
+            {% endif %}
             </tbody>
           </table>
 

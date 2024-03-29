@@ -228,9 +228,11 @@ def accounts_view(account_id):
 
     if form.validate_on_submit():
         type = form.type.data
+        if type == 'expense':
+            amount = -form.amount.data
         record = Record(
             name=form.name.data,
-            amount=form.amount.data,
+            amount=amount,
             date=form.date_spent.data,
             account_id=form.account.data,
             category=form.category.data,

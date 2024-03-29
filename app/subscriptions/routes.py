@@ -1,7 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-from re import S, sub
-from turtle import update
 from flask import render_template, flash, url_for, request
 from flask_login import login_required, current_user
 from app.subscriptions import blueprint

@@ -178,11 +178,12 @@ class Subscription(db.Model):
 
         next_date = None
         if (cycle == BillingType.MONTHLY.value):
+
             cycles = (current_date.year - start_date.year) * 12 + current_date.month - start_date.month
-            next_date = start_date + relativedelta(months=cycles + 1)
+            next_date = start_date + relativedelta(months=cycles)
         else:
             cycles = current_date.year - start_date.year
-            next_date = start_date + relativedelta(years=cycles + 1)
+            next_date = start_date + relativedelta(years=cycles)
         
         return next_date
     
@@ -195,7 +196,8 @@ class Subscription(db.Model):
         subs = cls.get_subs_from_user(user_id, SubType.ACTIVE)
         for sub in subs:
             next_date = cls.get_next_date(sub.start_date, sub.billing)
-            if next_date <= (current_date + relativedelta(days=30)):
+            time_diff = (next_date - current_date).days
+            if time_diff <= 30 and time_diff >= 0:
                 upcoming.append({
                     'subscription': sub,
                     'next_date': next_date

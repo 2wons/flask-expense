@@ -33,6 +33,9 @@ class User(db.Model, UserMixin):
     
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def has_account(self, account_id):
+        return Account.get_accounts_from_user(self.id, account_id)
 
     def __repr__(self):
         return '<User {},{}>'.format(self.id, self.email)
@@ -59,6 +62,16 @@ class Account(db.Model):
     subscriptions: so.Mapped[List['Subscription']] = so.relationship(
         back_populates='account', cascade='all, delete-orphan'
     )
+
+    @classmethod
+    def get_accounts_from_user(cls, user_id, account_id):
+        result = cls.query.filter(Account.user_id==user_id) \
+                        .filter(Account.id==account_id) \
+        .first()
+        # if there is no result, return false
+        if not result:
+            return False
+        return True
 
     def __repr__(self) -> str:
         return '<Account {},{}>'.format(self.id, self.name)

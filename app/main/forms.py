@@ -2,6 +2,7 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, DecimalField, DateField, TextAreaField, PasswordField, HiddenField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, Optional
+from app.models import Record
 
 class RecordForm(FlaskForm, object):
 
@@ -59,3 +60,18 @@ class ResetForm(FlaskForm):
     def validate_old_password(self, old_password):
         if not current_user.check_password(old_password.data):
             raise ValidationError('Invalid old password')
+
+def create_record(form):
+    type = form.type.data
+    if type == 'expense':
+        amount = -form.amount.data
+    record = Record(
+            name        =form.name.data,
+            amount      =amount,
+            date        =form.date_spent.data,
+            account_id  =form.account.data,
+            category    =form.category.data,
+            note        =form.note.data,
+            type        =type
+        )
+    return record

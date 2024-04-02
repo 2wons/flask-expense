@@ -276,9 +276,9 @@ def accounts_view(account_id):
     name = account.name
     
     return render_template(
-        'accounts_view.html',
+        'accounts/_layout.html',
         name=name,
-        form=form,
+        account_id=account_id,
         transactions=transactions,
         balance=balance,
         earnings=earnings,

@@ -1,0 +1,23 @@
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+     
+        <h5 class="modal-title fw-bold">{{ legend }}</h5>
+     
+      </div>
+      <div class="modal-body">
+        
+        <div id="addrecord" 
+          hx-get="{{ url_for('records.add', type=rtype, acid=account_id, prev=prev_url) }}" 
+          hx-trigger="load delay:100ms" 
+          hx-target="#contains" hx-swap="innerHTML" 
+        >
+          
+          <div id="contains">
+  
+          </div>
+          <!-- end contains -->
+        </div>
+      </div>
+    </div>
+  </div>

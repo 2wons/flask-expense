@@ -24,6 +24,9 @@ def create_app(config_class = Config):
     from app.auth import blueprint as auth_bp
     app.register_blueprint(auth_bp)
 
+    from app.records import blueprint as records_bp
+    app.register_blueprint(records_bp)
+
     from app.expenses import blueprint as expenses_bp
     app.register_blueprint(expenses_bp)
 

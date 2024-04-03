@@ -1,4 +1,4 @@
-<form id="record_form" hx-post="{{ url_for('records.add', type=rtype, acid=account_id, prev=request.url ) }}" novalidate>
+<form id="record_form" hx-post="{{ url_for('records.add', type=rtype, acid=account_id, prev=prev_url ) }}" novalidate>
     {{ form.hidden_tag() }}
     <div class="mb-3">
         {{ form.name.label(class="form-label") }}
@@ -37,7 +37,7 @@
             {% endfor %}
         </div>
     </div>
-    <div class="mb-3">
+    <!-- <div class="mb-3">
         {{ form.account.label(class="form-label") }}
         {{ form.account(class="form-select" + (' is-invalid' if form.account.errors else '') ) }}
         <div class="invalid-feedback">
@@ -45,7 +45,7 @@
                 <span> {{ error }} </span>
             {% endfor %}
         </div>
-    </div>
+    </div> -->
     <div class="input-group mb-3">
         <span class="input-group-text">Notes</span>
         {{ form.note(class="form-control" + (' is-invalid' if form.note.errors else ''), placeholder="Additional notes") }}
@@ -55,6 +55,8 @@
             {% endfor %}
         </div>
     </div>
+    <!-- hidden field for type -->
+    
     <!-- submit -->
     <div class="d-flex flex-row-reverse my-3">
         {{ form.submit(class="btn btn-primary ms-2") }}

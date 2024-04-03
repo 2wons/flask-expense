@@ -20,6 +20,8 @@ class RecordForm(FlaskForm, object):
                          validators=[Length(max=60)])
     type = HiddenField('Type',
                        validators=[Optional()])
+    prev_url = HiddenField('Prev URL',
+                            validators=[Optional()])
     submit = SubmitField('Add')
 
     def validate_amount(self, amount):
@@ -65,6 +67,8 @@ def create_record(form):
     type = form.type.data
     if type == 'expense':
         amount = -form.amount.data
+    else:
+        amount = form.amount.data
     record = Record(
             name        =form.name.data,
             amount      =amount,

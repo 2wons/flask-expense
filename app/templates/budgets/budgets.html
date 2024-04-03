@@ -37,8 +37,8 @@
     {% endfor %}
     </div>
     <div class="btn-group me-2">
-      <a href="{{ url_for('budgets.view', month=month-1, year=year) }}" class="btn btn-dark {{ 'disabled' if month == 1 }}">Prev</a>
-      <a href="{{ url_for('budgets.view', month=month+1, year=year) }}" class="btn btn-dark {{ 'disabled' if month == 12 }}">Next</a>
+      <a href="{{ url_for('budgets.view', month=month-1, year=year) }}" class="btn btn-dark {{ 'disabled' if month == 1 or not has_prev }}">Prev</a>
+      <a href="{{ url_for('budgets.view', month=month+1, year=year) }}" class="btn btn-dark {{ 'disabled' if month == 12 or not has_next }}">Next</a>
     </div>
     <div class="btn-group me-2">
       <a href="{{ url_for('budgets.create', year=2024) }}" class="btn btn-success">

@@ -170,7 +170,36 @@ def view(year, month):
     month_names = month_name[month]
     total_spent = sum([budgets[category]["spent"] for category in budgets])
     remaining = float(budget.amount) - total_spent
+
+
+    next_month = month + 1
+    next_year = year
+
+    if next_month > 12:
+        next_month = 1  # Wrap around to January
+        next_year = year + 1
+
+    previous_month = month - 1
+    previous_year = year
+
+    if previous_month == 0:
+        previous_month = 12  # Wrap around to December
+        previous_year = year - 1
     
+    user_id = current_user.id
+    
+    next_month_budget = Budget.find_from_user_and_month(user_id, next_year, next_month)
+    previous_month_budget = Budget.find_from_user_and_month(user_id, previous_year, previous_month)
+
+    has_next, has_prev = False, False
+
+    if next_month_budget:
+        has_next = True
+
+    if previous_month_budget:
+        has_prev = True
+ 
+
     return render_template(
         'budgets/budgets.html',
         budgets=budgets, 
@@ -179,5 +208,7 @@ def view(year, month):
         year=year,
         remaining=remaining,
         total_spent=total_spent, 
-        all_budgets=budgets_dict)
+        all_budgets=budgets_dict,
+        has_next=has_next,
+        has_prev=has_prev,)
 

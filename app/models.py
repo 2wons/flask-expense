@@ -10,6 +10,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from enum import Enum
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 class User(db.Model, UserMixin):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     last_name: so.Mapped[str] = so.mapped_column(sa.String(64), 
@@ -181,6 +184,9 @@ class Subscription(db.Model):
 
             cycles = (current_date.year - start_date.year) * 12 + current_date.month - start_date.month
             next_date = start_date + relativedelta(months=cycles)
+            # handle edge case where start date is in the future
+            if start_date > current_date:
+                next_date = start_date
         else:
             cycles = current_date.year - start_date.year
             next_date = start_date + relativedelta(years=cycles)
@@ -197,6 +203,7 @@ class Subscription(db.Model):
         for sub in subs:
             next_date = cls.get_next_date(sub.start_date, sub.billing)
             time_diff = (next_date - current_date).days
+            logging.debug('Time diff: {}'.format(time_diff))
             if time_diff <= 30 and time_diff >= 0:
                 upcoming.append({
                     'subscription': sub,

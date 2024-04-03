@@ -10,14 +10,6 @@
 
 ![image](https://github.com/2wons/flask-expense/assets/91067593/411d5334-2d9e-4cea-811d-e05ccac7a5f1)
 
-
-## Sprint 3 new
-- revise subscriptions with new layout
-- setup subscriptions table & model
-
-## Todo
-- mark due subscriptions as completed transactions
-- polish
   
 ## Features
 
@@ -25,6 +17,7 @@
 * **Monthly Budgets:** Monthly categorized budgets.
 * **Dashboard & statistics:** Relevant reports on transactions.
 * **Multiple Accounts:**  Categorize incomes/expenses with multiple accounts.
+* **Subsciptions Tracking:**  Track recurring payments
 
 ## How to run (windows)
 create venv
@@ -32,8 +25,13 @@ create venv
 python -m venv .venv
 ```
 activate venv
-```
+```ps
+# windows
 .\.venv\Scripts\Activate.ps1
+```
+```bash
+# unix/mac
+source .venv/bin/activate
 ```
 install requirements
 ```
@@ -44,7 +42,17 @@ fill out .env (rename .envsample to .env)
 - set up db credentials and your_secret_key
 - to use sqlite, leave db credentials blank
 
-apply migrations
+Example .env
+```env
+FLASK_APP=run.py
+FLASK_DEBUG=1
+
+# secret-key
+SECRET_KEY=75376d35f1b0ad433908bb5a4b5c9b9a
+# Db credentials can be blank to run sqlite
+```
+
+apply migrations (needed to create db)
 ```
 flask db upgrade
 ```

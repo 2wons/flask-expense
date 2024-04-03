@@ -1,0 +1,48 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Blank {% endblock title %}
+
+{% block content %}
+    <div class="container-fluid p-0">
+
+        <h1 class="h3 mb-3">Create New Account</h1>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Add Account</h5>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title mb-0">Account Form</h5>
+                        <form action=""  method="post" novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control form-control lg" + (' is-invalid' if form.name.errors else ''), placeholder="Enter account name") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                        <span> {{ error }} </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form.group.label(class="form-label") }}
+                                {{ form.group(class="form-select" + (' is-invalid' if form.group.errors else ''), placeholder="Enter account group") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.group.errors %}
+                                        <span> {{ error }} </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 mt-3">
+                                {{ form.submit(class="btn btn-lg btn-primary") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}

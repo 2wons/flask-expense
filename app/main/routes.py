@@ -130,7 +130,7 @@ def home():
     # Calculate the percentage increase
     income_increase =  round(calculate_percent_increase(cur_incomes, prev_incomes), 2) \
         if prev_incomes else None
-    expense_increase = round(calculate_percent_increase(cur_expenses, prev_expenses) *-1, 2) \
+    expense_increase = round(calculate_percent_increase(cur_expenses, prev_expenses) *1, 2) \
         if prev_expenses else None
     total_increase = round(calculate_percent_increase(cur_incomes - cur_expenses, prev_incomes - prev_expenses), 2) \
         if prev_incomes or prev_expenses else None

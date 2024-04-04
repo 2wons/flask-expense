@@ -39,7 +39,7 @@
       <div class="mb-0">
         {% if subdata is none  %}
           <span class="badge text-white text-bg-warning"> <i class="mdi mdi-arrow-bottom-right"></i> {{ subdata }} </span>
-        {% elif subdata > 0  %}
+        {% elif subdata > 0 and title != 'Total Expenses' %}
           <span class="badge text-white text-bg-success"> <i class="mdi mdi-arrow-bottom-right"></i> {{ subdata }} </span>
         {% else %}
           <span class="badge text-white text-bg-danger"> <i class="mdi mdi-arrow-bottom-right"></i> {{ subdata }} </span>

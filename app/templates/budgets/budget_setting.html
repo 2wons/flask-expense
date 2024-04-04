@@ -13,7 +13,7 @@
     <h1 class="h3 mb-3">{{ legend | capitalize }} Budget</h1>
 
   <div class="row justify-content-md-center">
-    <div class="col-6">
+    <div class="col-12 col-sm-6">
       <div class="card">
         <div class="card-header">
           <h5 class="card-title mb-0">{{ legend | capitalize }} Budget Setting</h5>
@@ -53,11 +53,11 @@
               <div class="container">
                 {% for field in form  %}
                   {% if field.name.endswith('_limit') %}
-                    <div class="row mb-3 px-3">
-                      <div class="col-3">
+                    <div class="row mb-3 px-sm-3">
+                      <div class="col-12 col-sm-3">
                         <label class="form-label">{{ field.label.text.replace('_', ' ') }}</label>
                       </div>
-                      <div class="col-5">
+                      <div class="col-12 col-sm-9">
                         <div class="input-group mb-3">
                           <span class="input-group-text">$</span>
                           {{ field(class="form-control" + (' is-invalid' if field.errors else ''), placeholder="199") }}

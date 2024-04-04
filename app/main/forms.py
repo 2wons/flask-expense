@@ -32,7 +32,7 @@ class RecordForm(FlaskForm, object):
 
     def fill_from_record(self, record):
         self.name.data = record.name
-        self.amount.data = record.amount
+        self.amount.data = abs(record.amount)
         self.category.data = record.category
         self.date_spent.data = record.date
         self.note.data = record.note

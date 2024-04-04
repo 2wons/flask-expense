@@ -4,7 +4,7 @@
         <h1 class="display-4"><span class="badge text-bg-secondary">{{ data['next_date'].day }}</span></h1>
         <h2>{{ data['next_date'].strftime('%b') }}</h2>
     </div>
-    <div class="col-8">
+    <div class="col-7 ps-5">
         {% set sub = data['subscription']  %}
         <h1 class="text-uppercase"><strong>{{ data['subscription'].provider }}</strong></h1>
         <ul class="list-inline">
@@ -13,7 +13,7 @@
             <li class="list-inline-item"><i class="fa fa-location-arrow" aria-hidden="true"></i>• started {{ sub.start_date }}</li>
         </ul>
     </div>
-    <div class="col-2">
+    <div class="col-12 col-sm-3 text-sm-end">
         {% set id_now = data['subscription'].id %}
         <button 
                 hx-get="{{ url_for('subs.pay', sub_id=id_now) }}" 

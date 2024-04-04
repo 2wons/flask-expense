@@ -30,7 +30,7 @@
 
   </div>
   <div class="btn-toolbar mb-2">
-    <div class="btn-group me-2">
+    <div class="my-2 my-md-0 btn-group me-2 overflow-x-auto">
       {% for smonth in range(1, 13) %}
       {% set month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][smonth-1] %}
       <a href="{{ url_for('budgets.view', month=smonth, year=year) }}" class="btn btn-light {{ 'fw-bold' if smonth == month }} {{ 'disabled' if smonth not in all_budgets[year] }}">{{ month_name }}</a>
@@ -52,21 +52,29 @@
   <div class="row">
     <div class="col-12">
       <div class="card">
-        <div class="card-header d-flex flex-row justify-content-between align-items-center p-5">
-          <h1 class="fs-1">{{ month_name }}'s Budget</h1>
-          <div class="d-flex flex-column align-items-center">
-            <h5 class="text-muted">Remaning</h5>
-            <h5 class="text-primary">$ {{ "{:,.2f}".format(remaining) }}</h5>
-
+        <div class="card-header p-5">
+          <div class="row justify-content-between align-items-center">
+            <div class="col-sm-12 col-md-3 text-center text-md-start">
+              <h1 class="fs-1">{{ month_name }}'s Budget</h1>
+            </div>
+            <div class="col-6 col-sm-6 col-md-3">
+              <div class="d-flex flex-column align-items-center">
+                <h5 class="text-muted">Remaning</h5>
+                <h5 class="text-primary">$ {{ "{:,.2f}".format(remaining) }}</h5>
+              </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-3">
+              <div class="d-flex flex-column align-items-center">
+                <h5 class="text-muted">Total Spent</h5>
+                <h5 class="text-danger">$ {{ "{:,.2f}".format(total_spent) }}</h5>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-3 text-center text-md-end">
+              <a href="{{ url_for('budgets.setting', year=year, month=month) }}" class="btn btn-light text-center">
+                <i data-feather="tool"></i><span class="ms-2">Budget Setting</span>
+              </a>
+            </div>
           </div>
-          <div class="d-flex flex-column align-items-center">
-            <h5 class="text-muted">Total Spent</h5>
-            <h5 class="text-danger">$ {{ "{:,.2f}".format(total_spent) }}</h5>
-            
-          </div>
-          <a href="{{ url_for('budgets.setting', year=year, month=month) }}" class="btn btn-light text-center">
-            <i data-feather="tool"></i><span class="ms-2">Budget Setting</span>
-          </a>
         </div>
         <div class="card-body px-0">
           {% for category, detail in budgets.items()  %}
@@ -82,10 +90,10 @@
             </div>
           </div>
           <div class="row px-4">
-            <div class="col-4">
+            <div class="col-12 col-md-4">
               <h5>$ {{ "{:,.2f}".format(detail.limit) }}</h5>
             </div>
-            <div class="col-8">
+            <div class="col-12 col-md-8">
               <div class="row justify-content-between">
                 <div class="col-4">
                   <span class="text-primary">$ {{ "{:,.2f}".format(detail.spent) }}</span>
@@ -106,3 +114,8 @@
 
 </div>
 {% endblock content %}
+{% block javascriptts %}
+<script>
+  
+</script>
+{% endblock javascriptts %}

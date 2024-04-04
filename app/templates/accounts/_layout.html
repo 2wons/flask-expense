@@ -13,7 +13,7 @@
 
 
   <div class="row">
-    <div class="col-4">
+    <div class="col-md-4 col-sm-12">
       <div class="card">
         <div class="card-header">
           <h5 class="card-title mb-0">Total Balance</h5>
@@ -56,23 +56,28 @@
       </div>
 
     </div>
-    <div class="col-8">
+    <div class="col-md-8 col-sm-12">
       <div class="card">
         <div class="card-header">
-          <div class="d-flex">
-            <h5 class="fs-3 mb-0 flex-grow-1">Transactions</h5>
+          <div class="d-flex flex-wrap">
+            <h5 class="fs-3 mb-2 mb-sm-0 flex-grow-1">Transactions</h5>
 
-            <button hx-get="{{ url_for('records.modal', acid=account_id, rtype='income', redirect=request.path, legend='Add Income') }}" 
-                hx-target="#modals-here" hx-trigger="click"
-                data-bs-toggle="modal" data-bs-target="#modals-here">
-              <i data-feather="plus"></i><span class="ms-2">Income</span>
-            </button>
-            
-            <button hx-get="{{ url_for('records.modal', acid=account_id, rtype='expense', redirect=request.path, legend='Add Expense') }}"
-                hx-target="#modals-here" hx-trigger="click" 
-                data-bs-toggle="modal" data-bs-target="#modals-here">
-              <i data-feather="minus"></i><span class="ms-2">Expense</span>
-            </button>
+            <div class="">
+              <button hx-get="{{ url_for('records.modal', acid=account_id, rtype='income', redirect=request.path, legend='Add Income') }}" 
+                  hx-target="#modals-here" hx-trigger="click"
+                  data-bs-toggle="modal" data-bs-target="#modals-here"
+                  class="p-2 p-sm-1">
+                <i data-feather="plus"></i><span class="ms-2">Income</span>
+              </button>
+              
+              <button hx-get="{{ url_for('records.modal', acid=account_id, rtype='expense', redirect=request.path, legend='Add Expense') }}"
+                  hx-target="#modals-here" hx-trigger="click" 
+                  data-bs-toggle="modal" data-bs-target="#modals-here"
+                  class="p-2 p-sm-1">
+                <i data-feather="minus"></i><span class="ms-2">Expense</span>
+              </button>
+            </div>
+
           </div>
  
           <!-- modal start -->
@@ -89,52 +94,55 @@
 
         </div>
         <div class="card-body p-0">
+          <div class="table-responsive">
 
-          <table class="table table-bordered border-light table-hover table-striped">
-            <thead>
-              <tr>
-                <th scope="row">Name</th>
-                <th scope="row">Amount</th>
-                <th scope="row">Date</th>
-                <th scope="row">Category</th>
-                <th scope="row">Type</th>
-                <th scope="row">Note</th>
-                <th scope="row">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for record in transactions  %}
+            <table class="table table-bordered border-light table-hover table-striped text-nowrap">
+              <thead>
                 <tr>
-                  <td class="text-secondary">{{ record.name }}</td>
-                  <td class="d-none d-xl-table-cell">$ {{ record.amount }}</td>
-                  <td class="d-none d-xl-table-cell">{{ record.date }}</td>
-                  <td class="d-none d-md-table-cell">{{ record.category }}</td>
-                  <td><span class="badge {{ 'bg-success' if record.type == 'income' else 'bg-danger' }}">{{ record.type }}</span></td>
-                  <td class="d-none d-md-table-cell">{{ record.note }}</td>
-                  <td class="table-action"> 
-                    {% if record.type == 'expense' %}
-                      <a href="{{ url_for('records.edit', id=record.id) }}">
-                      
-                    {% else %}
-                      <a href="{{ url_for('records.edit', id=record.id) }}">
-                      
-                    {% endif %}
-                      <i data-feather="edit-2" class="feather"></i>
-                    </a>
-                    <button hx-confirm="Are you sure to delete {{ record.name }}?" hx-target="closest tr" hx-swap="outerHTML swap:1s" 
-                    type="button" class="btn btn-icon p-1" hx-delete="{{ url_for('records.delete', id=record.id)  }}">
-                        <i data-feather="trash" class="feather"></i>
-                    </button>
-                  </td>
+                  <th scope="row">Name</th>
+                  <th scope="row">Amount</th>
+                  <th scope="row">Date</th>
+                  <th scope="row">Category</th>
+                  <th scope="row">Type</th>
+                  <th scope="row">Note</th>
+                  <th scope="row">Action</th>
                 </tr>
-              {% endfor %}
-              {% if transactions|length == 0 %}
-              <tr>
-                  <td colspan="8" class="text-center">No records found</td>
-              </tr>
-            {% endif %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% for record in transactions  %}
+                  <tr>
+                    <td class="text-secondary">{{ record.name }}</td>
+                    <td >$ {{ record.amount }}</td>
+                    <td >{{ record.date }}</td>
+                    <td >{{ record.category }}</td>
+                    <td><span class="badge {{ 'bg-success' if record.type == 'income' else 'bg-danger' }}">{{ record.type }}</span></td>
+                    <td >{{ record.note }}</td>
+                    <td class="table-action"> 
+                      {% if record.type == 'expense' %}
+                        <a href="{{ url_for('records.edit', id=record.id) }}">
+                        
+                      {% else %}
+                        <a href="{{ url_for('records.edit', id=record.id) }}">
+                        
+                      {% endif %}
+                        <i data-feather="edit-2" class="feather"></i>
+                      </a>
+                      <button hx-confirm="Are you sure to delete {{ record.name }}?" hx-target="closest tr" hx-swap="outerHTML swap:1s" 
+                      type="button" class="btn btn-icon p-1" hx-delete="{{ url_for('records.delete', id=record.id)  }}">
+                          <i data-feather="trash" class="feather"></i>
+                      </button>
+                    </td>
+                  </tr>
+                {% endfor %}
+                {% if transactions|length == 0 %}
+                <tr>
+                    <td colspan="8" class="text-center">No records found</td>
+                </tr>
+              {% endif %}
+              </tbody>
+            </table>
+
+          </div>
 
         </div>
       </div>

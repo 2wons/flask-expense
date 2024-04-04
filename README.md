@@ -19,7 +19,7 @@
 * **Multiple Accounts:**  Categorize incomes/expenses with multiple accounts.
 * **Subsciptions Tracking:**  Track recurring payments
 
-## How to run (windows)
+## Quick Start
 create venv
 ```
 python -m venv .venv
